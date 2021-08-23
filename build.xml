@@ -1,0 +1,27 @@
+<project>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" 
+        	destdir="build/classes"
+        	fork="yes"/>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="build/classes/graphics/"/>
+        <jar destfile="build/jar/ChessFrame.jar" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="ChessFrame"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run">
+        <java jar="Chess.jar" fork="true"/>
+    </target>
+
+</project>
