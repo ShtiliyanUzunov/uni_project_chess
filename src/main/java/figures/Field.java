@@ -10,9 +10,9 @@ public class Field extends Figure {
 	}
 	public Field(){
 		
-		Icon=null;
-		Color=null;
-		Position=null;
+		icon =null;
+		color =null;
+		position =null;
 		isAttByWhite=false;
 		isAttByBlack=false;
 		

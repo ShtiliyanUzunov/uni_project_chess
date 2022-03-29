@@ -15,20 +15,20 @@ public class Bishop extends Figure {
 
 	public Bishop(String Col, int x, int y) {
 		if (Col.equalsIgnoreCase("white"))
-			this.Icon = iconWhite;
+			this.icon = iconWhite;
 		else
-			this.Icon = iconBlack;
+			this.icon = iconBlack;
 
-		super.Color = Col;
-		super.Position[0] = x;
-		super.Position[1] = y;
+		super.color = Col;
+		super.position[0] = x;
+		super.position[1] = y;
 	}
 
 	public void setAttacks(){
 		String col = Bishop.this.getColor();
 		
-		if(Bishop.this.getPositionY()!=0&&Bishop.this.getPositionX()!=7)
-		for(int x=Bishop.this.getPositionX(),y=Bishop.this.getPositionY();y>0&&x<7;y--,x++){
+		if(Bishop.this.getY()!=0&&Bishop.this.getX()!=7)
+		for(int x = Bishop.this.getX(), y = Bishop.this.getY(); y>0&&x<7; y--,x++){
 			if(!(Chess.getElementAt(x+1, y-1)instanceof Field)){
 				Chess.getElementAt(x+1, y-1).setAttackedBy(col);
 				break;
@@ -36,8 +36,8 @@ public class Bishop extends Figure {
 			Chess.getElementAt(x+1, y-1).setAttackedBy(col);
 		}
 		
-		if(Bishop.this.getPositionY()!=0&&Bishop.this.getPositionX()!=0)
-		for(int x=Bishop.this.getPositionX(),y=Bishop.this.getPositionY();y>0&&x>0;y--,x--){
+		if(Bishop.this.getY()!=0&&Bishop.this.getX()!=0)
+		for(int x = Bishop.this.getX(), y = Bishop.this.getY(); y>0&&x>0; y--,x--){
 				if(!(Chess.getElementAt(x-1, y-1)instanceof Field)){
 					Chess.getElementAt(x-1, y-1).setAttackedBy(col);
 					break;
@@ -45,8 +45,8 @@ public class Bishop extends Figure {
 				Chess.getElementAt(x-1, y-1).setAttackedBy(col);
 			}
 		
-		if(Bishop.this.getPositionY()!=7&&Bishop.this.getPositionX()!=0)
-		for(int x=Bishop.this.getPositionX(),y=Bishop.this.getPositionY();y<7&&x>0;y++,x--){
+		if(Bishop.this.getY()!=7&&Bishop.this.getX()!=0)
+		for(int x = Bishop.this.getX(), y = Bishop.this.getY(); y<7&&x>0; y++,x--){
 				if(!(Chess.getElementAt(x-1, y+1)instanceof Field)){
 					Chess.getElementAt(x-1, y+1).setAttackedBy(col);
 					break;
@@ -54,8 +54,8 @@ public class Bishop extends Figure {
 				Chess.getElementAt(x-1, y+1).setAttackedBy(col);
 			}
 		
-		if(Bishop.this.getPositionY()!=7&&Bishop.this.getPositionX()!=7)
-			for(int x=Bishop.this.getPositionX(),y=Bishop.this.getPositionY();y<7&&x<7;y++,x++){
+		if(Bishop.this.getY()!=7&&Bishop.this.getX()!=7)
+			for(int x = Bishop.this.getX(), y = Bishop.this.getY(); y<7&&x<7; y++,x++){
 				if(!(Chess.getElementAt(x+1, y+1)instanceof Field)){
 					Chess.getElementAt(x+1, y+1).setAttackedBy(col);
 					break;
@@ -65,7 +65,7 @@ public class Bishop extends Figure {
 	}
 	
 	public boolean isMoveValid(int x, int y) {
-		return Math.abs(x - this.getPositionX()) == Math
-				.abs(y - this.getPositionY());
+		return Math.abs(x - this.getX()) == Math
+				.abs(y - this.getY());
 	}
 }

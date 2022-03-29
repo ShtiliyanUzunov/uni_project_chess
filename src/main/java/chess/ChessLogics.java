@@ -2,10 +2,12 @@ package chess;
 
 import figures.*;
 import graphics.ChessPanel;
+import org.springframework.stereotype.Service;
 
 import javax.swing.*;
 
-public abstract class ChessLogics {
+@Service
+public class ChessLogics {
 
     //Last Move[0] = last x, Last Move[1] = last y, Last Move[2] = new x, Last Move[3] = new y
     private static int[] LastMove = new int[4];
@@ -102,11 +104,10 @@ public abstract class ChessLogics {
         }
     }
 
-    // to be Done
 
     private static boolean fieldCheck(String color, int x, int y) {
         try {
-            if (Chess.getElementAt(x, y).isAttByOponent(color))
+            if (Chess.getElementAt(x, y).isAttByOpponent(color))
                 return false;
             if (Chess.getElementAt(x, y).getColor().equalsIgnoreCase(color))
                 return false;
@@ -117,7 +118,6 @@ public abstract class ChessLogics {
         return true;
     }
 
-    // To Be Done
     private static boolean checkMate(String color) {
         if (!checkIsSet)
             return false;
@@ -144,7 +144,7 @@ public abstract class ChessLogics {
         Chess.setElementAt(LastMove[2], LastMove[3], new Field());
         Chess.nullBoardAttack();
         Chess.setBoardAttack();
-        Chess.getElementAt(x, y).isAttByOponent(color);
+        Chess.getElementAt(x, y).isAttByOpponent(color);
         Chess.setElementAt(LastMove[2], LastMove[3], lastMovedPiece);
         Chess.nullBoardAttack();
         Chess.setBoardAttack();
@@ -162,7 +162,7 @@ public abstract class ChessLogics {
             Chess.setElementAt(x2, y2, temp1);
             Chess.nullBoardAttack();
             Chess.setBoardAttack();
-            if (Chess.getElementAt(x2, y2).isAttByOponent(myColor)) {
+            if (Chess.getElementAt(x2, y2).isAttByOpponent(myColor)) {
                 Chess.setElementAt(x1, y1, temp1);
                 Chess.setElementAt(x2, y2, temp2);
                 Chess.nullBoardAttack();
@@ -185,7 +185,7 @@ public abstract class ChessLogics {
         Chess.nullBoardAttack();
         Chess.setBoardAttack();
         if (color.equalsIgnoreCase("White")) {
-            if (Chess.getElementAt(WhiteKing[0], WhiteKing[1]).isAttByOponent(
+            if (Chess.getElementAt(WhiteKing[0], WhiteKing[1]).isAttByOpponent(
                     "White")) {
                 Chess.setElementAt(x1, y1, temp1);
                 Chess.setElementAt(x2, y2, temp2);
@@ -200,7 +200,7 @@ public abstract class ChessLogics {
                 return true;
             }
         } else {
-            if (Chess.getElementAt(BlackKing[0], BlackKing[1]).isAttByOponent(
+            if (Chess.getElementAt(BlackKing[0], BlackKing[1]).isAttByOpponent(
                     "Black")) {
                 Chess.setElementAt(x1, y1, temp1);
                 Chess.setElementAt(x2, y2, temp2);
@@ -220,13 +220,13 @@ public abstract class ChessLogics {
 
     private static boolean kingChecked(int x1, int y1) {
         if (Chess.getElementAt(x1, y1).getColor().equalsIgnoreCase("White")) {
-            if (Chess.getElementAt(BlackKing[0], BlackKing[1]).isAttByOponent(
+            if (Chess.getElementAt(BlackKing[0], BlackKing[1]).isAttByOpponent(
                     "Black")) {
                 checkIsSet = true;
                 return true;
             }
         } else {
-            if (Chess.getElementAt(WhiteKing[0], WhiteKing[1]).isAttByOponent(
+            if (Chess.getElementAt(WhiteKing[0], WhiteKing[1]).isAttByOpponent(
                     "White")) {
                 checkIsSet = true;
                 return true;
@@ -336,7 +336,7 @@ public abstract class ChessLogics {
             return false;
         if (Chess.getElementAt(x1, y1).isMoved())
             return false;
-        if (Chess.getElementAt(x1, y1).isAttByOponent(
+        if (Chess.getElementAt(x1, y1).isAttByOpponent(
                 Chess.getElementAt(x1, y1).getColor()))
             return false;
         if (!(Math.abs(x1 - x2) == 2 && y1 == y2))
@@ -350,11 +350,11 @@ public abstract class ChessLogics {
             condSideEmpty = Chess.getElementAt(x1 - 1, y1) instanceof Field
                     && Chess.getElementAt(x1 - 2, y1) instanceof Field
                     && Chess.getElementAt(x1 - 3, y1) instanceof Field;
-            condSideNotAtt = !Chess.getElementAt(x1 - 1, y1).isAttByOponent(
+            condSideNotAtt = !Chess.getElementAt(x1 - 1, y1).isAttByOpponent(
                     Chess.getElementAt(x1, y1).getColor())
-                    && !Chess.getElementAt(x1 - 2, y1).isAttByOponent(
+                    && !Chess.getElementAt(x1 - 2, y1).isAttByOpponent(
                     Chess.getElementAt(x1, y1).getColor())
-                    && !Chess.getElementAt(x1 - 3, y1).isAttByOponent(
+                    && !Chess.getElementAt(x1 - 3, y1).isAttByOpponent(
                     Chess.getElementAt(x1, y1).getColor());
             rookNotMoved = !Chess.getElementAt(0, y1).isMoved()
                     && Chess.getElementAt(0, y1) instanceof Rook;
@@ -368,9 +368,9 @@ public abstract class ChessLogics {
         if (x1 < x2) {
             condSideEmpty = Chess.getElementAt(x1 + 1, y1) instanceof Field
                     && Chess.getElementAt(x1 + 2, y1) instanceof Field;
-            condSideNotAtt = !Chess.getElementAt(x1 + 1, y1).isAttByOponent(
+            condSideNotAtt = !Chess.getElementAt(x1 + 1, y1).isAttByOpponent(
                     Chess.getElementAt(x1, y1).getColor())
-                    && !Chess.getElementAt(x1 + 2, y1).isAttByOponent(
+                    && !Chess.getElementAt(x1 + 2, y1).isAttByOpponent(
                     Chess.getElementAt(x1, y1).getColor());
             rookNotMoved = !Chess.getElementAt(7, y1).isMoved()
                     && Chess.getElementAt(7, y1) instanceof Rook;

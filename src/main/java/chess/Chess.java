@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 
 import figures.*;
 
-public abstract class Chess {
+public class Chess {
 
 	private static Figure[][] chessBoard = new Figure[8][8];
 

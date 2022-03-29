@@ -75,7 +75,7 @@ public class ChessPanel extends JPanel {
         for (int i = 7; i >= 0; i--)
             for (int j = 7; j >= 0; j--) {
                 if (!(Chess.getElementAt(i, j) instanceof Field)) {
-                    temp = Chess.getElementAt(i, j).getImage();
+                    temp = Chess.getElementAt(i, j).getIcon().getImage();
                     g.drawImage(temp, i * 75, 525 - j * 75, null);
                 }
 

@@ -3,3 +3,5 @@ bin
 build
 *.iml
 out
+.gradle
+gradle
