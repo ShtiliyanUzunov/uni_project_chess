@@ -123,9 +123,5 @@ public class ChessFrame extends JFrame {
 	}
 
 
-	public static void main(String[] Args) {
-		
-		new ChessFrame();
-	
-	}
+
 }
