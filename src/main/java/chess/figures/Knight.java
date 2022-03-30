@@ -1,11 +1,10 @@
-package figures;
+package chess.figures;
 
 import java.lang.Math;
 
 import javax.swing.ImageIcon;
 
 import chess.Board;
-import chess.GlobalState;
 
 public class Knight extends Figure {
 

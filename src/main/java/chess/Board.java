@@ -2,9 +2,7 @@ package chess;
 
 import java.io.*;
 
-import javax.swing.ImageIcon;
-
-import figures.*;
+import chess.figures.*;
 
 public class Board implements Serializable {
 

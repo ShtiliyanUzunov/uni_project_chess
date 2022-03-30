@@ -3,14 +3,14 @@ package chess;
 public class GlobalState {
 
     private static Board board;
-    private static ChessLogics chessLogics;
+    private static BoardMovement boardMovement;
     private static GameOperations gameOperations;
 
 
     static {
         board = new Board();
         board.initializeBoard();
-        chessLogics = new ChessLogics();
+        boardMovement = new BoardMovement();
         gameOperations = new GameOperations();
     }
 
@@ -22,8 +22,8 @@ public class GlobalState {
         board = b;
     }
 
-    public static ChessLogics getChessLogics() {
-        return chessLogics;
+    public static BoardMovement getBoardMovement() {
+        return boardMovement;
     }
 
 }

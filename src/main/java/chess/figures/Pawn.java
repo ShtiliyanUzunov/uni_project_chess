@@ -1,8 +1,7 @@
-package figures;
+package chess.figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
-import chess.GlobalState;
 
 public class Pawn extends Figure {
 

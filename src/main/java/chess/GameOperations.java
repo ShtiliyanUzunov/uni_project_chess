@@ -30,7 +30,7 @@ public class GameOperations {
 
     private void newGame() {
         GlobalState.getBoard().initializeBoard();
-        GlobalState.getChessLogics().resetState();
+        GlobalState.getBoardMovement().resetState();
     }
 
     private void saveGame(File outputPath) {
@@ -41,11 +41,11 @@ public class GameOperations {
             oos = new ObjectOutputStream(fos);
 
             oos.writeObject(GlobalState.getBoard());
-            oos.writeObject(GlobalState.getChessLogics().getLastMove());
-            oos.writeObject(GlobalState.getChessLogics().getPlayerTurn());
-            oos.writeObject(GlobalState.getChessLogics().getWhiteKing());
-            oos.writeObject(GlobalState.getChessLogics().getBlackKing());
-            oos.writeBoolean(GlobalState.getChessLogics().isCheckIsSet());
+            oos.writeObject(GlobalState.getBoardMovement().getLastMove());
+            oos.writeObject(GlobalState.getBoardMovement().getPlayerTurn());
+            oos.writeObject(GlobalState.getBoardMovement().getWhiteKing());
+            oos.writeObject(GlobalState.getBoardMovement().getBlackKing());
+            oos.writeBoolean(GlobalState.getBoardMovement().isCheckIsSet());
             oos.close();
             fos.close();
 
@@ -63,11 +63,11 @@ public class GameOperations {
             ois = new ObjectInputStream(fis);
 
             GlobalState.setBoard((Board) ois.readObject());
-            GlobalState.getChessLogics().setLastMove((int[]) ois.readObject());
-            GlobalState.getChessLogics().setPlayerTurn((String) ois.readObject());
-            GlobalState.getChessLogics().setWhiteKing((int[]) ois.readObject());
-            GlobalState.getChessLogics().setBlackKing((int[]) ois.readObject());
-            GlobalState.getChessLogics().setCheckIsSet(ois.readBoolean());
+            GlobalState.getBoardMovement().setLastMove((int[]) ois.readObject());
+            GlobalState.getBoardMovement().setPlayerTurn((String) ois.readObject());
+            GlobalState.getBoardMovement().setWhiteKing((int[]) ois.readObject());
+            GlobalState.getBoardMovement().setBlackKing((int[]) ois.readObject());
+            GlobalState.getBoardMovement().setCheckIsSet(ois.readBoolean());
             fis.close();
             ois.close();
 

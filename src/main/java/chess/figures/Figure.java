@@ -1,10 +1,9 @@
-package figures;
+package chess.figures;
 
 import chess.Board;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.Image;
 import java.io.Serializable;
 
 import javax.swing.ImageIcon;

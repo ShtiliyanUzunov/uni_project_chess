@@ -1,4 +1,4 @@
-package figures;
+package chess.figures;
 
 public class Field extends Figure {
 

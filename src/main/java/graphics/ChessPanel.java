@@ -1,6 +1,6 @@
 package graphics;
 
-import figures.Field;
+import chess.figures.Field;
 import chess.*;
 
 import java.awt.Graphics;
@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 public class ChessPanel extends JPanel {
 
-    private final ChessLogics chessLogics = GlobalState.getChessLogics();
+    private final BoardMovement boardMovement = GlobalState.getBoardMovement();
     private ChessFrame parent;
 
     private static int x1 = -1, x2 = -1, y1 = -1, y2 = -1;
@@ -41,7 +41,7 @@ public class ChessPanel extends JPanel {
                     y1 = -1;
                     return;
                 }
-                if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase(chessLogics.getPlayerTurn()))
+                if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase(boardMovement.getPlayerTurn()))
                     indicatorSelect = true;
                 else {
                     x1 = -1;
@@ -51,7 +51,7 @@ public class ChessPanel extends JPanel {
             } else {
                 x2 = e.getX() / 75;
                 y2 = 7 - e.getY() / 75;
-                chessLogics.moveFigure(x1, y1, x2, y2);
+                boardMovement.moveFigure(x1, y1, x2, y2);
 
                 x1 = -1;
                 x2 = -1;

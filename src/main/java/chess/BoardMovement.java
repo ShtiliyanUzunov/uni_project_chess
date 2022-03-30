@@ -1,7 +1,7 @@
 package chess;
 
 import communication.EventBus;
-import figures.*;
+import chess.figures.*;
 import graphics.ChessPanel;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import javax.swing.*;
 
 @Getter
 @Setter
-public class ChessLogics {
+public class BoardMovement {
 
     private EventBus eventBus = EventBus.getEventBus();
 
@@ -68,7 +68,7 @@ public class ChessLogics {
         }
     }
 
-    public ChessLogics() {
+    public BoardMovement() {
         this.resetState();
     }
 
