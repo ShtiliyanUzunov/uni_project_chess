@@ -8,9 +8,9 @@ public class GlobalState {
 
 
     static {
+        boardMovement = new BoardMovement();
         board = new Board();
         board.initializeBoard();
-        boardMovement = new BoardMovement();
         gameOperations = new GameOperations();
     }
 

@@ -16,7 +16,7 @@ public class ChessPanel extends JPanel {
     private final BoardMovement boardMovement = GlobalState.getBoardMovement();
     private ChessFrame parent;
 
-    private static int x1 = -1, x2 = -1, y1 = -1, y2 = -1;
+    private static int xFrom = -1, xTo = -1, yFrom = -1, yTo = -1;
     private boolean indicatorSelect = false;
     private final Image select = new ImageIcon("images\\Select.png").getImage();
     private final Image attByWhite = new ImageIcon("images\\AttByWhite.png").getImage();
@@ -28,35 +28,40 @@ public class ChessPanel extends JPanel {
         addMouseListener(new MA());
     }
 
+    private void nullifyFromSelection() {
+        xFrom = -1;
+        yFrom = -1;
+    }
+
+    private void nullifyToSelection() {
+        xTo = -1;
+        yTo = -1;
+    }
+
     private class MA extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
             Board board = GlobalState.getBoard();
 
-            if (x1 < 0 && y1 < 0) {
-                x1 = e.getX() / 75;
-                y1 = 7 - e.getY() / 75;
+            if (xFrom < 0 && yFrom < 0) {
+                xFrom = e.getX() / 75;
+                yFrom = 7 - e.getY() / 75;
 
-                if (board.getElementAt(x1, y1) instanceof Field) {
-                    x1 = -1;
-                    y1 = -1;
+                if (board.getElementAt(xFrom, yFrom) instanceof Field) {
+                    nullifyFromSelection();
                     return;
                 }
-                if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase(boardMovement.getPlayerTurn()))
+                if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(boardMovement.getPlayerTurn()))
                     indicatorSelect = true;
                 else {
-                    x1 = -1;
-                    y1 = -1;
+                    nullifyFromSelection();
                 }
-
             } else {
-                x2 = e.getX() / 75;
-                y2 = 7 - e.getY() / 75;
-                boardMovement.moveFigure(x1, y1, x2, y2);
+                xTo = e.getX() / 75;
+                yTo = 7 - e.getY() / 75;
+                boardMovement.moveFigure(xFrom, yFrom, xTo, yTo);
 
-                x1 = -1;
-                x2 = -1;
-                y1 = -1;
-                y2 = -1;
+                nullifyFromSelection();
+                nullifyToSelection();
                 indicatorSelect = false;
             }
             repaint();
@@ -64,10 +69,10 @@ public class ChessPanel extends JPanel {
     }
 
     public static void setCords(int a, int b, int c, int d) {
-        x1 = a;
-        y1 = b;
-        x2 = c;
-        y2 = d;
+        xFrom = a;
+        yFrom = b;
+        xTo = c;
+        yTo = d;
     }
 
     public void paint(Graphics g) {
@@ -94,7 +99,7 @@ public class ChessPanel extends JPanel {
 
             }
         if (indicatorSelect) {
-            g.drawImage(select, x1 * 75, 525 - y1 * 75, null);
+            g.drawImage(select, xFrom * 75, 525 - yFrom * 75, null);
         }
 
     }

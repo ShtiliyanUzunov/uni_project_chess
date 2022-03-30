@@ -21,21 +21,28 @@ public class BoardMovement {
     private int[] whiteKing;
     private int[] blackKing;
 
+    public BoardMovement() {
+        this.resetState();
+    }
+
     // Main Move Function
     public void moveFigure(int x1, int y1, int x2, int y2) {
         Board board = GlobalState.getBoard();
-        boolean nPassantCondition = nPassant(x1, y1, x2, y2)
-                || casteling(x1, y1, x2, y2);
-
         if (board.getElementAt(x1, y1) instanceof Field) {
             ChessPanel.setCords(-1, -1, -1, -1);
             return;
         }
 
-        boolean clearPathCondition = isPathClear(x1, y1, x2, y2)
-                && board.getElementAt(x1, y1).isMoveValid(x2, y2)
-                && (!isFigureFriendly(x1, y1, x2, y2)) && checkTurn(x1, y1)
-                && discoverCheck(x1, y1, x2, y2);
+        boolean nPassantCondition = nPassant(x1, y1, x2, y2)
+                || casteling(x1, y1, x2, y2);
+
+
+        boolean clearPathCondition =
+                isPathClear(x1, y1, x2, y2)
+                        && !isFigureFriendly(x1, y1, x2, y2)
+                        && board.getElementAt(x1, y1).isTargetLocationValid(x2, y2)
+                        && checkTurn(x1, y1)
+                        && discoverCheck(x1, y1, x2, y2);
 
         if (clearPathCondition || nPassantCondition) {
             lastMove[0] = x1;
@@ -66,25 +73,6 @@ public class BoardMovement {
                 JOptionPane.showMessageDialog(null, "Check!");
 
         }
-    }
-
-    public BoardMovement() {
-        this.resetState();
-    }
-
-    private boolean fieldCheck(String color, int x, int y) {
-        Board board = GlobalState.getBoard();
-
-        try {
-            if (board.getElementAt(x, y).isAttByOpponent(color))
-                return false;
-            if (board.getElementAt(x, y).getColor().equalsIgnoreCase(color))
-                return false;
-
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 
     private boolean discoverCheck(int x1, int y1, int x2, int y2) {
@@ -173,11 +161,12 @@ public class BoardMovement {
         return false;
     }
 
-    private boolean isPathClear(int x1, int y1, int x2, int y2) {
+    public boolean isPathClear(int x1, int y1, int x2, int y2) {
         Board board = GlobalState.getBoard();
 
         if (board.getElementAt(x1, y1) instanceof Knight)
             return true;
+
         int temp1, temp2, temp3, temp4;
         if (x1 == x2) {
             if (y1 > y2) {

@@ -1,10 +1,12 @@
 package chess.figures;
 
 import java.lang.Math;
+import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class Bishop extends Figure {
 
@@ -25,48 +27,13 @@ public class Bishop extends Figure {
         super.board = b;
     }
 
+    @Override
     public void setAttacks() {
-
-        String col = Bishop.this.getColor();
-
-        if (Bishop.this.getY() != 0 && Bishop.this.getX() != 7)
-            for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y > 0 && x < 7; y--, x++) {
-                if (!(board.getElementAt(x + 1, y - 1) instanceof Field)) {
-                    board.getElementAt(x + 1, y - 1).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(x + 1, y - 1).setAttackedBy(col);
-            }
-
-        if (Bishop.this.getY() != 0 && Bishop.this.getX() != 0)
-            for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y > 0 && x > 0; y--, x--) {
-                if (!(board.getElementAt(x - 1, y - 1) instanceof Field)) {
-                    board.getElementAt(x - 1, y - 1).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(x - 1, y - 1).setAttackedBy(col);
-            }
-
-        if (Bishop.this.getY() != 7 && Bishop.this.getX() != 0)
-            for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y < 7 && x > 0; y++, x--) {
-                if (!(board.getElementAt(x - 1, y + 1) instanceof Field)) {
-                    board.getElementAt(x - 1, y + 1).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(x - 1, y + 1).setAttackedBy(col);
-            }
-
-        if (Bishop.this.getY() != 7 && Bishop.this.getX() != 7)
-            for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y < 7 && x < 7; y++, x++) {
-                if (!(board.getElementAt(x + 1, y + 1) instanceof Field)) {
-                    board.getElementAt(x + 1, y + 1).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(x + 1, y + 1).setAttackedBy(col);
-            }
+        Patterns.applyDiagonalPatternFromPosition(this.getX(), this.getY(), this.getColor());
     }
 
-    public boolean isMoveValid(int x, int y) {
+    @Override
+    public boolean isTargetLocationValid(int x, int y) {
         return Math.abs(x - this.getX()) == Math
                 .abs(y - this.getY());
     }

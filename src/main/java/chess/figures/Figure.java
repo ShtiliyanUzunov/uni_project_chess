@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -21,7 +22,7 @@ public abstract class Figure implements Serializable {
     protected Board board;
 
     //Main Move Checker
-    public abstract boolean isMoveValid(int x, int y);
+    public abstract boolean isTargetLocationValid(int x, int y);
 
     //Attacking functions
     public abstract void setAttacks();
@@ -31,11 +32,11 @@ public abstract class Figure implements Serializable {
         isAttByBlack = false;
     }
 
-    public boolean isAttByOpponent(String myColor) {
-        if (myColor.equalsIgnoreCase("white") && isAttByBlack)
+    public boolean isAttByOpponent(String figureColor) {
+        if (figureColor.equalsIgnoreCase("white") && isAttByBlack)
             return true;
 
-        return myColor.equalsIgnoreCase("black") && isAttByWhite;
+        return figureColor.equalsIgnoreCase("black") && isAttByWhite;
     }
 
     public void setAttackedBy(String Color) {

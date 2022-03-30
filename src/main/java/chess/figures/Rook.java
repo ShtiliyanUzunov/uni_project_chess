@@ -1,8 +1,8 @@
 package chess.figures;
 
 import javax.swing.ImageIcon;
-
 import chess.Board;
+
 
 public class Rook extends Figure {
 
@@ -25,49 +25,15 @@ public class Rook extends Figure {
         super.board = b;
     }
 
+    @Override
     public void setAttacks() {
-        String col = Rook.this.getColor();
-
-        if (Rook.this.getX() != 7)
-            for (int i = Rook.this.getX(); i < 7; i++) {
-                if (!(board.getElementAt(i + 1, Rook.this.getY()) instanceof Field)) {
-                    board.getElementAt(i + 1, Rook.this.getY()).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(i + 1, Rook.this.getY()).setAttackedBy(col);
-            }
-
-        if (Rook.this.getY() != 7)
-            for (int i = Rook.this.getY(); i < 7; i++) {
-                if (!(board.getElementAt(Rook.this.getX(), i + 1) instanceof Field)) {
-                    board.getElementAt(Rook.this.getX(), i + 1).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(Rook.this.getX(), i + 1).setAttackedBy(col);
-            }
-
-        if (Rook.this.getX() != 0)
-            for (int i = Rook.this.getX(); i > 0; i--) {
-                if (!(board.getElementAt(i - 1, Rook.this.getY()) instanceof Field)) {
-                    board.getElementAt(i - 1, Rook.this.getY()).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(i - 1, Rook.this.getY()).setAttackedBy(col);
-            }
-
-        if (Rook.this.getY() != 0)
-            for (int i = Rook.this.getY(); i > 0; i--) {
-                if (!(board.getElementAt(Rook.this.getX(), i - 1) instanceof Field)) {
-                    board.getElementAt(Rook.this.getX(), i - 1).setAttackedBy(col);
-                    break;
-                }
-                board.getElementAt(Rook.this.getX(), i - 1).setAttackedBy(col);
-            }
+        Patterns.applyHorizontalAndVerticalPatternFromPosition(this.getX(), this.getY(), this.getColor());
     }
 
-    public boolean isMoveValid(int x, int y) {
-        boolean checkX = x == Rook.this.getX();
-        boolean checkY = y == Rook.this.getY();
+    @Override
+    public boolean isTargetLocationValid(int x, int y) {
+        boolean checkX = x == this.getX();
+        boolean checkY = y == this.getY();
         return checkX || checkY;
     }
 }

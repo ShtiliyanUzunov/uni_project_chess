@@ -88,7 +88,7 @@ public class Board implements Serializable {
 			}
 	}
 
-	public void Attacked(int x, int y, String color) {
+	public void attacked(int x, int y, String color) {
 		try {
 			chessBoard[x][y].setAttackedBy(color);
 		} catch (Exception ignored) {}
