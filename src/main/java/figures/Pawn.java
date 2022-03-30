@@ -1,7 +1,7 @@
 package figures;
 import javax.swing.ImageIcon;
 
-import chess.Chess;
+import chess.Board;
 
 public class Pawn extends Figure {
 
@@ -24,18 +24,18 @@ public class Pawn extends Figure {
 
 	public void setAttacks(){
 		if(Pawn.this.color.equalsIgnoreCase("White")){
-			Chess.Attacked(Pawn.this.getX()+1, Pawn.this.getY()+1,"White");
-			Chess.Attacked(Pawn.this.getX()-1, Pawn.this.getY()+1,"White");
+			Board.Attacked(Pawn.this.getX()+1, Pawn.this.getY()+1,"White");
+			Board.Attacked(Pawn.this.getX()-1, Pawn.this.getY()+1,"White");
 		}
 		else
 		{
-			Chess.Attacked(Pawn.this.getX()+1, Pawn.this.getY()-1,"Black");
-			Chess.Attacked(Pawn.this.getX()-1, Pawn.this.getY()-1,"Black");
+			Board.Attacked(Pawn.this.getX()+1, Pawn.this.getY()-1,"Black");
+			Board.Attacked(Pawn.this.getX()-1, Pawn.this.getY()-1,"Black");
 		}
 	}
 	
 	public boolean isMoveValid(int x, int y) {
-		if (!(Chess.getElementAt(x, y) instanceof Field) && (x == Pawn.this.getX()))
+		if (!(Board.getElementAt(x, y) instanceof Field) && (x == Pawn.this.getX()))
 			return false;
 
 		if (Pawn.this.getColor().equalsIgnoreCase("White")) {
@@ -52,7 +52,7 @@ public class Pawn extends Figure {
 
 			// Takes
 			return (Pawn.this.getY() - y == -1)
-					&& (!(Chess.getElementAt(x, y) instanceof Field))
+					&& (!(Board.getElementAt(x, y) instanceof Field))
 					&& (((Pawn.this.getX() - x) == 1) || ((Pawn.this.getX() - x) == -1));
 		}else{
 			//Black
@@ -69,7 +69,7 @@ public class Pawn extends Figure {
 
 						// Takes
 			return (Pawn.this.getY() - y == 1)
-					&& (!(Chess.getElementAt(x, y) instanceof Field))
+					&& (!(Board.getElementAt(x, y) instanceof Field))
 					&& (((Pawn.this.getX() - x) == 1) || ((Pawn.this.getX() - x) == -1));
 		}
 	}

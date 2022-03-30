@@ -2,7 +2,7 @@ package figures;
 
 import javax.swing.ImageIcon;
 
-import chess.Chess;
+import chess.Board;
 
 public class Queen extends Figure {
 
@@ -27,87 +27,87 @@ public class Queen extends Figure {
 
 		if (Queen.this.getX() != 7)
 			for (int i = Queen.this.getX(); i < 7; i++) {
-				if (!(Chess.getElementAt(i + 1, Queen.this.getY()) instanceof Field)) {
-					Chess.getElementAt(i + 1, Queen.this.getY())
+				if (!(Board.getElementAt(i + 1, Queen.this.getY()) instanceof Field)) {
+					Board.getElementAt(i + 1, Queen.this.getY())
 							.setAttackedBy(col);
 					break;
 				}
 				
-				Chess.getElementAt(i + 1, Queen.this.getY())
+				Board.getElementAt(i + 1, Queen.this.getY())
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 7)
 			for (int i = Queen.this.getY(); i < 7; i++) {
-				if (!(Chess.getElementAt(Queen.this.getX(), i + 1) instanceof Field)) {
-					Chess.getElementAt(Queen.this.getX(), i + 1)
+				if (!(Board.getElementAt(Queen.this.getX(), i + 1) instanceof Field)) {
+					Board.getElementAt(Queen.this.getX(), i + 1)
 							.setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(Queen.this.getX(), i + 1)
+				Board.getElementAt(Queen.this.getX(), i + 1)
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getX() != 0)
 			for (int i = Queen.this.getX(); i > 0; i--) {
-				if (!(Chess.getElementAt(i - 1, Queen.this.getY()) instanceof Field)) {
-					Chess.getElementAt(i - 1, Queen.this.getY())
+				if (!(Board.getElementAt(i - 1, Queen.this.getY()) instanceof Field)) {
+					Board.getElementAt(i - 1, Queen.this.getY())
 							.setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(i - 1, Queen.this.getY())
+				Board.getElementAt(i - 1, Queen.this.getY())
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 0)
 			for (int i = Queen.this.getY(); i > 0; i--) {
-				if (!(Chess.getElementAt(Queen.this.getX(), i - 1) instanceof Field)) {
-					Chess.getElementAt(Queen.this.getX(), i - 1)
+				if (!(Board.getElementAt(Queen.this.getX(), i - 1) instanceof Field)) {
+					Board.getElementAt(Queen.this.getX(), i - 1)
 							.setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(Queen.this.getX(), i - 1)
+				Board.getElementAt(Queen.this.getX(), i - 1)
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 0 && Queen.this.getX() != 7)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y > 0 && x < 7; y--, x++) {
-				if (!(Chess.getElementAt(x + 1, y - 1) instanceof Field)) {
-					Chess.getElementAt(x + 1, y - 1).setAttackedBy(col);
+				if (!(Board.getElementAt(x + 1, y - 1) instanceof Field)) {
+					Board.getElementAt(x + 1, y - 1).setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(x + 1, y - 1).setAttackedBy(col);
+				Board.getElementAt(x + 1, y - 1).setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 0 && Queen.this.getX() != 0)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y > 0 && x > 0; y--, x--) {
-				if (!(Chess.getElementAt(x - 1, y - 1) instanceof Field)) {
-					Chess.getElementAt(x - 1, y - 1).setAttackedBy(col);
+				if (!(Board.getElementAt(x - 1, y - 1) instanceof Field)) {
+					Board.getElementAt(x - 1, y - 1).setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(x - 1, y - 1).setAttackedBy(col);
+				Board.getElementAt(x - 1, y - 1).setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 7 && Queen.this.getX() != 0)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y < 7 && x > 0; y++, x--) {
-				if (!(Chess.getElementAt(x - 1, y + 1) instanceof Field)) {
-					Chess.getElementAt(x - 1, y + 1).setAttackedBy(col);
+				if (!(Board.getElementAt(x - 1, y + 1) instanceof Field)) {
+					Board.getElementAt(x - 1, y + 1).setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(x - 1, y + 1).setAttackedBy(col);
+				Board.getElementAt(x - 1, y + 1).setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 7 && Queen.this.getX() != 7)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y < 7 && x < 7; y++, x++) {
-				if (!(Chess.getElementAt(x + 1, y + 1) instanceof Field)) {
-					Chess.getElementAt(x + 1, y + 1).setAttackedBy(col);
+				if (!(Board.getElementAt(x + 1, y + 1) instanceof Field)) {
+					Board.getElementAt(x + 1, y + 1).setAttackedBy(col);
 					break;
 				}
-				Chess.getElementAt(x + 1, y + 1).setAttackedBy(col);
+				Board.getElementAt(x + 1, y + 1).setAttackedBy(col);
 			}
 
 	}

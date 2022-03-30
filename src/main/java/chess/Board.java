@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 
 import figures.*;
 
-public class Chess {
+public class Board {
 
 	private static Figure[][] chessBoard = new Figure[8][8];
 
@@ -155,16 +155,6 @@ public class Chess {
 			ChessLogics.setCheckIsSet(ois.readBoolean());
 			fis.close();
 			ois.close();
-			
-//			System.out.println(ChessLogics.getPlayerTurn());
-//			System.out.println(ChessLogics.getWhiteKing()[0]+" "+ChessLogics.getWhiteKing()[1]);
-//			System.out.println(ChessLogics.getLastMove()[0]+" "+ChessLogics.getLastMove()[1]);
-//			System.out.println(ChessLogics.isCheckIsSet());
-//			System.out.println(Chess.getElementAt(3, 1).getColor());
-//			System.out.println(Chess.getElementAt(3, 1).getClass().toString());
-//			System.out.println(Chess.getElementAt(3, 1).isAttByBlack());
-//			System.out.println(Chess.getElementAt(6, 7).getPositionX()+" "+Chess.getElementAt(6, 7).getPositionY());
-
 			
 		} catch (ClassNotFoundException | IOException e) {
 

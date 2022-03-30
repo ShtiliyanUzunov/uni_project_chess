@@ -1,6 +1,6 @@
 package graphics;
 
-import chess.Chess;
+import chess.Board;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -88,7 +88,7 @@ public class ChessFrame extends JFrame {
 			fileChooser.showOpenDialog(null);
 			File input = fileChooser.getSelectedFile();
 			if (input!=null){
-				Chess.loadGame(input);
+				Board.loadGame(input);
 
 				chessPanel.repaint();
 			}
@@ -103,7 +103,7 @@ public class ChessFrame extends JFrame {
 			File output = fileChooser.getSelectedFile();
 
 			if(output!=null){
-				Chess.saveGame(output);
+				Board.saveGame(output);
 			}
 		});
 		
@@ -112,7 +112,7 @@ public class ChessFrame extends JFrame {
 
 	private void setNewGameAction() {
 		newGame.addActionListener(e -> {
-			Chess.initializeBoard();
+			Board.initializeBoard();
 			chessPanel.repaint();
 		});
 	}
