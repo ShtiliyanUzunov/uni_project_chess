@@ -2,7 +2,6 @@ package chess;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,10 +13,10 @@ import figures.*;
 
 public class Board {
 
-	private static Figure[][] chessBoard = new Figure[8][8];
+	private final Figure[][] chessBoard = new Figure[8][8];
 
 	// Main Initializing Function
-	public static void initializeBoard() {
+	public void initializeBoard() {
 
 		/*
 		 * White pieces
@@ -78,27 +77,18 @@ public class Board {
 			}
 		}
 		setBoardAttack();
-		initializeComponents();
 	}
 
-	private static void initializeComponents() {
-		ChessLogics.setLastMove(new int[4]);
-		ChessLogics.setPlayerTurn("White");
-		ChessLogics.setCheckIsSet(false);
-		int[] whiteKing = {4,0};
-		int[] blackKing = {4,7};
-		ChessLogics.setWhiteKing(whiteKing);
-		ChessLogics.setBlackKing(blackKing);
-	}
+
 
 	// Attacking Functions
-	public static void nullBoardAttack() {
+	public void nullBoardAttack() {
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++)
 				chessBoard[i][j].resetAttack();
 	}
 
-	public static void setBoardAttack() {
+	public void setBoardAttack() {
 		for (int i = 0; i < 8; i++)
 			for (int j = 0; j < 8; j++) {
 				if (chessBoard[i][j] instanceof Field)
@@ -107,63 +97,18 @@ public class Board {
 			}
 	}
 
-	public static void Attacked(int x, int y, String color) {
+	public void Attacked(int x, int y, String color) {
 		try {
 			chessBoard[x][y].setAttackedBy(color);
 		} catch (Exception ignored) {}
 	}
 
 	// Getter and Setter
-	public static Figure getElementAt(int x, int y) {
+	public Figure getElementAt(int x, int y) {
 		return chessBoard[x][y];
 	}
-	
-	public static void saveGame(File outputPath){
-		FileOutputStream fos;
-		ObjectOutputStream oos;
-		try {
-			fos = new FileOutputStream(outputPath);
-			oos = new ObjectOutputStream(fos);
-			
-			oos.writeObject(chessBoard);
-			oos.writeObject(ChessLogics.getLastMove());
-			oos.writeObject(ChessLogics.getPlayerTurn());
-			oos.writeObject(ChessLogics.getWhiteKing());
-			oos.writeObject(ChessLogics.getBlackKing());
-			oos.writeBoolean(ChessLogics.isCheckIsSet());
-			oos.close();
-			fos.close();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void loadGame(File inputPath){
-		FileInputStream fis;
-		ObjectInputStream ois;
-		try {
-			fis = new FileInputStream(inputPath);
-			ois = new ObjectInputStream(fis);
-			
-			chessBoard = (Figure[][])ois.readObject();
-			ChessLogics.setLastMove((int[])ois.readObject());
-			ChessLogics.setPlayerTurn((String)ois.readObject());
-			ChessLogics.setWhiteKing((int[])ois.readObject());
-			ChessLogics.setBlackKing((int[])ois.readObject());
-			ChessLogics.setCheckIsSet(ois.readBoolean());
-			fis.close();
-			ois.close();
-			
-		} catch (ClassNotFoundException | IOException e) {
 
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void setElementAt(int x, int y, Figure fig) {
+	public void setElementAt(int x, int y, Figure fig) {
 		chessBoard[x][y] = fig;
 	}
 

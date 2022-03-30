@@ -38,7 +38,6 @@ public abstract class Figure implements Serializable {
     }
 
     public void setAttackedBy(String Color) {
-
         if (Color.equalsIgnoreCase("white"))
             isAttByWhite = true;
         else
@@ -52,7 +51,7 @@ public abstract class Figure implements Serializable {
     public int getY() {
         return position[1];
     }
-//
+
     public void setPosition(int x, int y) {
         position[0] = x;
         position[1] = y;

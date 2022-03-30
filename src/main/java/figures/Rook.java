@@ -3,6 +3,7 @@ package figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class Rook extends Figure {
 
@@ -10,6 +11,8 @@ public class Rook extends Figure {
             "images\\white_set\\Rook.png");
     private static final ImageIcon iconBlack = new ImageIcon(
             "images\\black_set\\Rook.png");
+
+    private final Board board = GlobalState.getBoard();
 
     public Rook(String Col, int x, int y) {
         moved = false;
@@ -29,38 +32,38 @@ public class Rook extends Figure {
 
         if (Rook.this.getX() != 7)
             for (int i = Rook.this.getX(); i < 7; i++) {
-                if (!(Board.getElementAt(i + 1, Rook.this.getY()) instanceof Field)) {
-                    Board.getElementAt(i + 1, Rook.this.getY()).setAttackedBy(col);
+                if (!(board.getElementAt(i + 1, Rook.this.getY()) instanceof Field)) {
+                    board.getElementAt(i + 1, Rook.this.getY()).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(i + 1, Rook.this.getY()).setAttackedBy(col);
+                board.getElementAt(i + 1, Rook.this.getY()).setAttackedBy(col);
             }
 
         if (Rook.this.getY() != 7)
             for (int i = Rook.this.getY(); i < 7; i++) {
-                if (!(Board.getElementAt(Rook.this.getX(), i + 1) instanceof Field)) {
-                    Board.getElementAt(Rook.this.getX(), i + 1).setAttackedBy(col);
+                if (!(board.getElementAt(Rook.this.getX(), i + 1) instanceof Field)) {
+                    board.getElementAt(Rook.this.getX(), i + 1).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(Rook.this.getX(), i + 1).setAttackedBy(col);
+                board.getElementAt(Rook.this.getX(), i + 1).setAttackedBy(col);
             }
 
         if (Rook.this.getX() != 0)
             for (int i = Rook.this.getX(); i > 0; i--) {
-                if (!(Board.getElementAt(i - 1, Rook.this.getY()) instanceof Field)) {
-                    Board.getElementAt(i - 1, Rook.this.getY()).setAttackedBy(col);
+                if (!(board.getElementAt(i - 1, Rook.this.getY()) instanceof Field)) {
+                    board.getElementAt(i - 1, Rook.this.getY()).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(i - 1, Rook.this.getY()).setAttackedBy(col);
+                board.getElementAt(i - 1, Rook.this.getY()).setAttackedBy(col);
             }
 
         if (Rook.this.getY() != 0)
             for (int i = Rook.this.getY(); i > 0; i--) {
-                if (!(Board.getElementAt(Rook.this.getX(), i - 1) instanceof Field)) {
-                    Board.getElementAt(Rook.this.getX(), i - 1).setAttackedBy(col);
+                if (!(board.getElementAt(Rook.this.getX(), i - 1) instanceof Field)) {
+                    board.getElementAt(Rook.this.getX(), i - 1).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(Rook.this.getX(), i - 1).setAttackedBy(col);
+                board.getElementAt(Rook.this.getX(), i - 1).setAttackedBy(col);
             }
     }
 

@@ -13,18 +13,20 @@ import javax.swing.JPanel;
 
 public class ChessPanel extends JPanel {
 
+    private final Board board = GlobalState.getBoard();
+    private final ChessLogics chessLogics = GlobalState.getChessLogics();
+    private ChessFrame parent;
+
     private static int x1 = -1, x2 = -1, y1 = -1, y2 = -1;
     private boolean indicatorSelect = false;
     private final Image select = new ImageIcon("images\\Select.png").getImage();
     private final Image attByWhite = new ImageIcon("images\\AttByWhite.png").getImage();
     private final Image attByBlack = new ImageIcon("images\\AttByBlack.png").getImage();
 
-    ChessPanel() {
+    ChessPanel(ChessFrame parent) {
         super();
+        this.parent = parent;
         addMouseListener(new MA());
-        Board.initializeBoard();
-        repaint();
-
     }
 
     private class MA extends MouseAdapter {
@@ -33,12 +35,12 @@ public class ChessPanel extends JPanel {
                 x1 = e.getX() / 75;
                 y1 = 7 - e.getY() / 75;
 
-                if (Board.getElementAt(x1, y1) instanceof Field) {
+                if (board.getElementAt(x1, y1) instanceof Field) {
                     x1 = -1;
                     y1 = -1;
                     return;
                 }
-                if (Board.getElementAt(x1, y1).getColor().equalsIgnoreCase(ChessLogics.playerTurn))
+                if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase(chessLogics.getPlayerTurn()))
                     indicatorSelect = true;
                 else {
                     x1 = -1;
@@ -48,7 +50,7 @@ public class ChessPanel extends JPanel {
             } else {
                 x2 = e.getX() / 75;
                 y2 = 7 - e.getY() / 75;
-                ChessLogics.moveFigure(x1, y1, x2, y2);
+                chessLogics.moveFigure(x1, y1, x2, y2);
 
                 x1 = -1;
                 x2 = -1;
@@ -74,14 +76,18 @@ public class ChessPanel extends JPanel {
         g.drawImage(temp, 0, 0, null);
         for (int i = 7; i >= 0; i--)
             for (int j = 7; j >= 0; j--) {
-                if (!(Board.getElementAt(i, j) instanceof Field)) {
-                    temp = Board.getElementAt(i, j).getIcon().getImage();
+                if (!(board.getElementAt(i, j) instanceof Field)) {
+                    temp = board.getElementAt(i, j).getIcon().getImage();
                     g.drawImage(temp, i * 75, 525 - j * 75, null);
                 }
 
-                if (Board.getElementAt(i, j).isAttByBlack())
+                if (!parent.getShowAttacks().getState()) {
+                    continue;
+                }
+
+                if (board.getElementAt(i, j).isAttByBlack())
                     g.drawImage(attByBlack, i * 75, 525 - j * 75, null);
-                if (Board.getElementAt(i, j).isAttByWhite())
+                if (board.getElementAt(i, j).isAttByWhite())
                     g.drawImage(attByWhite, i * 75, 525 - j * 75, null);
 
             }
@@ -90,6 +96,5 @@ public class ChessPanel extends JPanel {
         }
 
     }
-
 
 }

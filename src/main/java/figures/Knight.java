@@ -5,6 +5,7 @@ import java.lang.Math;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class Knight extends Figure {
 
@@ -12,6 +13,8 @@ public class Knight extends Figure {
 			"images\\white_set\\Knight.png");
 	private static final ImageIcon iconBlack = new ImageIcon(
 			"images\\black_set\\Knight.png");
+
+	private final Board board = GlobalState.getBoard();
 
 	public Knight(String Col, int x, int y) {
 		if (Col.equalsIgnoreCase("white"))
@@ -25,14 +28,14 @@ public class Knight extends Figure {
 	}
 
 	public void setAttacks(){
-		Board.Attacked(Knight.this.getX()+2, Knight.this.getY()+1, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()+1, Knight.this.getY()+2, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()-2, Knight.this.getY()+1, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()-1, Knight.this.getY()+2, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()+2, Knight.this.getY()-1, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()+1, Knight.this.getY()-2, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()-2, Knight.this.getY()-1, Knight.this.getColor());
-		Board.Attacked(Knight.this.getX()-1, Knight.this.getY()-2, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()+2, Knight.this.getY()+1, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()+1, Knight.this.getY()+2, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()-2, Knight.this.getY()+1, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()-1, Knight.this.getY()+2, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()+2, Knight.this.getY()-1, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()+1, Knight.this.getY()-2, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()-2, Knight.this.getY()-1, Knight.this.getColor());
+		board.Attacked(Knight.this.getX()-1, Knight.this.getY()-2, Knight.this.getColor());
 		}
 		
 	

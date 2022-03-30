@@ -3,6 +3,7 @@ package figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class Queen extends Figure {
 
@@ -10,6 +11,8 @@ public class Queen extends Figure {
 			"images\\white_set\\Queen.png");
 	private static final ImageIcon iconBlack = new ImageIcon(
 			"images\\black_set\\Queen.png");
+
+	private final Board board = GlobalState.getBoard();
 
 	public Queen(String Col, int x, int y) {
 		if (Col.equalsIgnoreCase("white"))
@@ -27,87 +30,87 @@ public class Queen extends Figure {
 
 		if (Queen.this.getX() != 7)
 			for (int i = Queen.this.getX(); i < 7; i++) {
-				if (!(Board.getElementAt(i + 1, Queen.this.getY()) instanceof Field)) {
-					Board.getElementAt(i + 1, Queen.this.getY())
+				if (!(board.getElementAt(i + 1, Queen.this.getY()) instanceof Field)) {
+					board.getElementAt(i + 1, Queen.this.getY())
 							.setAttackedBy(col);
 					break;
 				}
 				
-				Board.getElementAt(i + 1, Queen.this.getY())
+				board.getElementAt(i + 1, Queen.this.getY())
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 7)
 			for (int i = Queen.this.getY(); i < 7; i++) {
-				if (!(Board.getElementAt(Queen.this.getX(), i + 1) instanceof Field)) {
-					Board.getElementAt(Queen.this.getX(), i + 1)
+				if (!(board.getElementAt(Queen.this.getX(), i + 1) instanceof Field)) {
+					board.getElementAt(Queen.this.getX(), i + 1)
 							.setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(Queen.this.getX(), i + 1)
+				board.getElementAt(Queen.this.getX(), i + 1)
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getX() != 0)
 			for (int i = Queen.this.getX(); i > 0; i--) {
-				if (!(Board.getElementAt(i - 1, Queen.this.getY()) instanceof Field)) {
-					Board.getElementAt(i - 1, Queen.this.getY())
+				if (!(board.getElementAt(i - 1, Queen.this.getY()) instanceof Field)) {
+					board.getElementAt(i - 1, Queen.this.getY())
 							.setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(i - 1, Queen.this.getY())
+				board.getElementAt(i - 1, Queen.this.getY())
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 0)
 			for (int i = Queen.this.getY(); i > 0; i--) {
-				if (!(Board.getElementAt(Queen.this.getX(), i - 1) instanceof Field)) {
-					Board.getElementAt(Queen.this.getX(), i - 1)
+				if (!(board.getElementAt(Queen.this.getX(), i - 1) instanceof Field)) {
+					board.getElementAt(Queen.this.getX(), i - 1)
 							.setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(Queen.this.getX(), i - 1)
+				board.getElementAt(Queen.this.getX(), i - 1)
 						.setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 0 && Queen.this.getX() != 7)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y > 0 && x < 7; y--, x++) {
-				if (!(Board.getElementAt(x + 1, y - 1) instanceof Field)) {
-					Board.getElementAt(x + 1, y - 1).setAttackedBy(col);
+				if (!(board.getElementAt(x + 1, y - 1) instanceof Field)) {
+					board.getElementAt(x + 1, y - 1).setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(x + 1, y - 1).setAttackedBy(col);
+				board.getElementAt(x + 1, y - 1).setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 0 && Queen.this.getX() != 0)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y > 0 && x > 0; y--, x--) {
-				if (!(Board.getElementAt(x - 1, y - 1) instanceof Field)) {
-					Board.getElementAt(x - 1, y - 1).setAttackedBy(col);
+				if (!(board.getElementAt(x - 1, y - 1) instanceof Field)) {
+					board.getElementAt(x - 1, y - 1).setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(x - 1, y - 1).setAttackedBy(col);
+				board.getElementAt(x - 1, y - 1).setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 7 && Queen.this.getX() != 0)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y < 7 && x > 0; y++, x--) {
-				if (!(Board.getElementAt(x - 1, y + 1) instanceof Field)) {
-					Board.getElementAt(x - 1, y + 1).setAttackedBy(col);
+				if (!(board.getElementAt(x - 1, y + 1) instanceof Field)) {
+					board.getElementAt(x - 1, y + 1).setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(x - 1, y + 1).setAttackedBy(col);
+				board.getElementAt(x - 1, y + 1).setAttackedBy(col);
 			}
 
 		if (Queen.this.getY() != 7 && Queen.this.getX() != 7)
 			for (int x = Queen.this.getX(), y = Queen.this
 					.getY(); y < 7 && x < 7; y++, x++) {
-				if (!(Board.getElementAt(x + 1, y + 1) instanceof Field)) {
-					Board.getElementAt(x + 1, y + 1).setAttackedBy(col);
+				if (!(board.getElementAt(x + 1, y + 1) instanceof Field)) {
+					board.getElementAt(x + 1, y + 1).setAttackedBy(col);
 					break;
 				}
-				Board.getElementAt(x + 1, y + 1).setAttackedBy(col);
+				board.getElementAt(x + 1, y + 1).setAttackedBy(col);
 			}
 
 	}

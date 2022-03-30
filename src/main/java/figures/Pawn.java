@@ -2,6 +2,7 @@ package figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class Pawn extends Figure {
 
@@ -9,6 +10,8 @@ public class Pawn extends Figure {
 			"images\\white_set\\Pawn.png");
 	private static final ImageIcon iconBlack = new ImageIcon(
 			"images\\black_set\\Pawn.png");
+
+	private final Board board = GlobalState.getBoard();
 
 	public Pawn(String Col, int x, int y) {
 		this.color = Col;
@@ -24,18 +27,18 @@ public class Pawn extends Figure {
 
 	public void setAttacks(){
 		if(Pawn.this.color.equalsIgnoreCase("White")){
-			Board.Attacked(Pawn.this.getX()+1, Pawn.this.getY()+1,"White");
-			Board.Attacked(Pawn.this.getX()-1, Pawn.this.getY()+1,"White");
+			board.Attacked(Pawn.this.getX()+1, Pawn.this.getY()+1,"White");
+			board.Attacked(Pawn.this.getX()-1, Pawn.this.getY()+1,"White");
 		}
 		else
 		{
-			Board.Attacked(Pawn.this.getX()+1, Pawn.this.getY()-1,"Black");
-			Board.Attacked(Pawn.this.getX()-1, Pawn.this.getY()-1,"Black");
+			board.Attacked(Pawn.this.getX()+1, Pawn.this.getY()-1,"Black");
+			board.Attacked(Pawn.this.getX()-1, Pawn.this.getY()-1,"Black");
 		}
 	}
 	
 	public boolean isMoveValid(int x, int y) {
-		if (!(Board.getElementAt(x, y) instanceof Field) && (x == Pawn.this.getX()))
+		if (!(board.getElementAt(x, y) instanceof Field) && (x == Pawn.this.getX()))
 			return false;
 
 		if (Pawn.this.getColor().equalsIgnoreCase("White")) {
@@ -52,7 +55,7 @@ public class Pawn extends Figure {
 
 			// Takes
 			return (Pawn.this.getY() - y == -1)
-					&& (!(Board.getElementAt(x, y) instanceof Field))
+					&& (!(board.getElementAt(x, y) instanceof Field))
 					&& (((Pawn.this.getX() - x) == 1) || ((Pawn.this.getX() - x) == -1));
 		}else{
 			//Black
@@ -69,7 +72,7 @@ public class Pawn extends Figure {
 
 						// Takes
 			return (Pawn.this.getY() - y == 1)
-					&& (!(Board.getElementAt(x, y) instanceof Field))
+					&& (!(board.getElementAt(x, y) instanceof Field))
 					&& (((Pawn.this.getX() - x) == 1) || ((Pawn.this.getX() - x) == -1));
 		}
 	}

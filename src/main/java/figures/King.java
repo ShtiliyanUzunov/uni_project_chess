@@ -5,6 +5,7 @@ import java.lang.Math;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class King extends Figure {
 
@@ -15,23 +16,25 @@ public class King extends Figure {
 		super.position[0] = x;
 		super.position[1] = y;
 	}
+
+	private final Board board = GlobalState.getBoard();
 	
 	public void setAttacks() {
-		Board.Attacked(King.this.getX() + 1, King.this.getY(),
+		board.Attacked(King.this.getX() + 1, King.this.getY(),
 				King.this.getColor());
-		Board.Attacked(King.this.getX(), King.this.getY() + 1,
+		board.Attacked(King.this.getX(), King.this.getY() + 1,
 				King.this.getColor());
-		Board.Attacked(King.this.getX() - 1, King.this.getY(),
+		board.Attacked(King.this.getX() - 1, King.this.getY(),
 				King.this.getColor());
-		Board.Attacked(King.this.getX(), King.this.getY() - 1,
+		board.Attacked(King.this.getX(), King.this.getY() - 1,
 				King.this.getColor());
-		Board.Attacked(King.this.getX() + 1,
+		board.Attacked(King.this.getX() + 1,
 				King.this.getY() + 1, King.this.getColor());
-		Board.Attacked(King.this.getX() + 1,
+		board.Attacked(King.this.getX() + 1,
 				King.this.getY() - 1, King.this.getColor());
-		Board.Attacked(King.this.getX() - 1,
+		board.Attacked(King.this.getX() - 1,
 				King.this.getY() + 1, King.this.getColor());
-		Board.Attacked(King.this.getX() - 1,
+		board.Attacked(King.this.getX() - 1,
 				King.this.getY() - 1, King.this.getColor());
 
 	}

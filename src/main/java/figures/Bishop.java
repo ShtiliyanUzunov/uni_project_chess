@@ -5,6 +5,7 @@ import java.lang.Math;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.GlobalState;
 
 public class Bishop extends Figure {
 
@@ -12,6 +13,8 @@ public class Bishop extends Figure {
             "images\\white_set\\Bishop.png");
     private static final ImageIcon iconBlack = new ImageIcon(
             "images\\black_set\\Bishop.png");
+
+    private final Board board = GlobalState.getBoard();
 
     public Bishop(String color, int x, int y) {
         if (color.equalsIgnoreCase("white"))
@@ -29,38 +32,38 @@ public class Bishop extends Figure {
 
         if (Bishop.this.getY() != 0 && Bishop.this.getX() != 7)
             for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y > 0 && x < 7; y--, x++) {
-                if (!(Board.getElementAt(x + 1, y - 1) instanceof Field)) {
-                    Board.getElementAt(x + 1, y - 1).setAttackedBy(col);
+                if (!(board.getElementAt(x + 1, y - 1) instanceof Field)) {
+                    board.getElementAt(x + 1, y - 1).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(x + 1, y - 1).setAttackedBy(col);
+                board.getElementAt(x + 1, y - 1).setAttackedBy(col);
             }
 
         if (Bishop.this.getY() != 0 && Bishop.this.getX() != 0)
             for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y > 0 && x > 0; y--, x--) {
-                if (!(Board.getElementAt(x - 1, y - 1) instanceof Field)) {
-                    Board.getElementAt(x - 1, y - 1).setAttackedBy(col);
+                if (!(board.getElementAt(x - 1, y - 1) instanceof Field)) {
+                    board.getElementAt(x - 1, y - 1).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(x - 1, y - 1).setAttackedBy(col);
+                board.getElementAt(x - 1, y - 1).setAttackedBy(col);
             }
 
         if (Bishop.this.getY() != 7 && Bishop.this.getX() != 0)
             for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y < 7 && x > 0; y++, x--) {
-                if (!(Board.getElementAt(x - 1, y + 1) instanceof Field)) {
-                    Board.getElementAt(x - 1, y + 1).setAttackedBy(col);
+                if (!(board.getElementAt(x - 1, y + 1) instanceof Field)) {
+                    board.getElementAt(x - 1, y + 1).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(x - 1, y + 1).setAttackedBy(col);
+                board.getElementAt(x - 1, y + 1).setAttackedBy(col);
             }
 
         if (Bishop.this.getY() != 7 && Bishop.this.getX() != 7)
             for (int x = Bishop.this.getX(), y = Bishop.this.getY(); y < 7 && x < 7; y++, x++) {
-                if (!(Board.getElementAt(x + 1, y + 1) instanceof Field)) {
-                    Board.getElementAt(x + 1, y + 1).setAttackedBy(col);
+                if (!(board.getElementAt(x + 1, y + 1) instanceof Field)) {
+                    board.getElementAt(x + 1, y + 1).setAttackedBy(col);
                     break;
                 }
-                Board.getElementAt(x + 1, y + 1).setAttackedBy(col);
+                board.getElementAt(x + 1, y + 1).setAttackedBy(col);
             }
     }
 
