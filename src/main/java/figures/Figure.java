@@ -1,5 +1,6 @@
 package figures;
 
+import chess.Board;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public abstract class Figure implements Serializable {
     protected String color;
     protected int[] position = new int[2];
     protected boolean moved;
+    protected Board board;
 
     //Main Move Checker
     public abstract boolean isMoveValid(int x, int y);

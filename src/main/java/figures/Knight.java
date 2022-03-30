@@ -14,9 +14,8 @@ public class Knight extends Figure {
 	private static final ImageIcon iconBlack = new ImageIcon(
 			"images\\black_set\\Knight.png");
 
-	private final Board board = GlobalState.getBoard();
 
-	public Knight(String Col, int x, int y) {
+	public Knight(String Col, int x, int y, Board b) {
 		if (Col.equalsIgnoreCase("white"))
 			this.icon = iconWhite;
 		else
@@ -25,6 +24,7 @@ public class Knight extends Figure {
 		super.color = Col;
 		super.position[0] = x;
 		super.position[1] = y;
+		super.board = b;
 	}
 
 	public void setAttacks(){

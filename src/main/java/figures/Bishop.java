@@ -14,9 +14,7 @@ public class Bishop extends Figure {
     private static final ImageIcon iconBlack = new ImageIcon(
             "images\\black_set\\Bishop.png");
 
-    private final Board board = GlobalState.getBoard();
-
-    public Bishop(String color, int x, int y) {
+    public Bishop(String color, int x, int y, Board b) {
         if (color.equalsIgnoreCase("white"))
             this.icon = iconWhite;
         else
@@ -25,9 +23,11 @@ public class Bishop extends Figure {
         super.color = color;
         super.position[0] = x;
         super.position[1] = y;
+        super.board = b;
     }
 
     public void setAttacks() {
+
         String col = Bishop.this.getColor();
 
         if (Bishop.this.getY() != 0 && Bishop.this.getX() != 7)

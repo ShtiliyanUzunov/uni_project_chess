@@ -1,21 +1,17 @@
 package chess;
 
-import communication.ChannelNames;
 import communication.EventBus;
 import figures.*;
 import graphics.ChessPanel;
-import jdk.nashorn.internal.objects.Global;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
-import java.io.*;
 
 @Getter
 @Setter
 public class ChessLogics {
 
-    private Board board = GlobalState.getBoard();
     private EventBus eventBus = EventBus.getEventBus();
 
     //Last Move[0] = last x, Last Move[1] = last y, Last Move[2] = new x, Last Move[3] = new y
@@ -25,9 +21,9 @@ public class ChessLogics {
     private int[] whiteKing;
     private int[] blackKing;
 
-
     // Main Move Function
     public void moveFigure(int x1, int y1, int x2, int y2) {
+        Board board = GlobalState.getBoard();
         boolean nPassantCondition = nPassant(x1, y1, x2, y2)
                 || casteling(x1, y1, x2, y2);
 
@@ -72,32 +68,13 @@ public class ChessLogics {
         }
     }
 
-    private void newGame() {
-        this.board.initializeBoard();
-        this.resetState();
-    }
-
     public ChessLogics() {
         this.resetState();
-        eventBus.register(ChannelNames.UI_NEW_GAME, (Object param) -> {
-            this.newGame();
-            return null;
-        });
-
-        eventBus.register(ChannelNames.UI_SAVE_GAME, (Object param) -> {
-            File p = (File) param;
-            this.saveGame(p);
-            return null;
-        });
-
-        eventBus.register(ChannelNames.UI_LOAD_GAME, (Object param) -> {
-            File p = (File) param;
-            this.loadGame(p);
-            return null;
-        });
     }
 
     private boolean fieldCheck(String color, int x, int y) {
+        Board board = GlobalState.getBoard();
+
         try {
             if (board.getElementAt(x, y).isAttByOpponent(color))
                 return false;
@@ -110,41 +87,8 @@ public class ChessLogics {
         return true;
     }
 
-    private boolean checkMate(String color) {
-        if (!checkIsSet)
-            return false;
-        //System.out.printf("\nCheckmate Bitch\n%s", color);
-        int x, y;
-        if (color.equalsIgnoreCase("White")) {
-            x = whiteKing[0];
-            y = whiteKing[1];
-        } else {
-            x = blackKing[0];
-            y = blackKing[1];
-        }
-        // Move the King
-        boolean condField = fieldCheck(color, x + 1, y)
-                || fieldCheck(color, x + 1, y + 1)
-                || fieldCheck(color, x + 1, y - 1)
-                || fieldCheck(color, x, y - 1) || fieldCheck(color, x, y + 1)
-                || fieldCheck(color, x - 1, y - 1)
-                || fieldCheck(color, x - 1, y)
-                || fieldCheck(color, x - 1, y + 1);
-
-        // Find check Sources
-        Figure lastMovedPiece = board.getElementAt(lastMove[2], lastMove[3]);
-        board.setElementAt(lastMove[2], lastMove[3], new Field());
-        board.nullBoardAttack();
-        board.setBoardAttack();
-        board.getElementAt(x, y).isAttByOpponent(color);
-        board.setElementAt(lastMove[2], lastMove[3], lastMovedPiece);
-        board.nullBoardAttack();
-        board.setBoardAttack();
-
-        return !condField;
-    }
-
     private boolean discoverCheck(int x1, int y1, int x2, int y2) {
+        Board board = GlobalState.getBoard();
 
         if (board.getElementAt(x1, y1) instanceof King) {
             String myColor = board.getElementAt(x1, y1).getColor();
@@ -211,6 +155,8 @@ public class ChessLogics {
     }
 
     private boolean kingChecked(int x1, int y1) {
+        Board board = GlobalState.getBoard();
+
         if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase("White")) {
             if (board.getElementAt(blackKing[0], blackKing[1]).isAttByOpponent(
                     "Black")) {
@@ -228,6 +174,8 @@ public class ChessLogics {
     }
 
     private boolean isPathClear(int x1, int y1, int x2, int y2) {
+        Board board = GlobalState.getBoard();
+
         if (board.getElementAt(x1, y1) instanceof Knight)
             return true;
         int temp1, temp2, temp3, temp4;
@@ -304,10 +252,12 @@ public class ChessLogics {
     }
 
     private boolean checkTurn(int x1, int y1) {
+        Board board = GlobalState.getBoard();
         return board.getElementAt(x1, y1).getColor().equalsIgnoreCase(playerTurn);
     }
 
     private String opositeColor(int x1, int y1) {
+        Board board = GlobalState.getBoard();
         if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase("White"))
             return "Black";
         else
@@ -315,6 +265,7 @@ public class ChessLogics {
     }
 
     private boolean isFigureFriendly(int x1, int y1, int x2, int y2) {
+        Board board = GlobalState.getBoard();
         if (board.getElementAt(x2, y2) instanceof Field)
             return false;
         return board.getElementAt(x1, y1).getColor().equalsIgnoreCase(board.getElementAt(x2, y2)
@@ -323,7 +274,7 @@ public class ChessLogics {
 
     // Special Moves Functions
     private boolean casteling(int x1, int y1, int x2, int y2) {
-
+        Board board = GlobalState.getBoard();
         if (!(board.getElementAt(x1, y1) instanceof King))
             return false;
         if (board.getElementAt(x1, y1).isMoved())
@@ -379,6 +330,8 @@ public class ChessLogics {
 
 
     private void eightRank(int x2, int y2) {
+        Board board = GlobalState.getBoard();
+
         if (!(board.getElementAt(x2, y2) instanceof Pawn)) {
             return;
         }
@@ -401,25 +354,25 @@ public class ChessLogics {
                     break;
                 case 0: {
                     board.setElementAt(x2, y2, new Queen(board.getElementAt(x2, y2)
-                            .getColor(), x2, y2));
+                            .getColor(), x2, y2, board));
                     board.getElementAt(x2, y2).setPosition(x2, y2);
                     break;
                 }
                 case 1: {
                     board.setElementAt(x2, y2, new Rook(board.getElementAt(x2, y2)
-                            .getColor(), x2, y2));
+                            .getColor(), x2, y2, board));
                     board.getElementAt(x2, y2).setPosition(x2, y2);
                     break;
                 }
                 case 2: {
                     board.setElementAt(x2, y2, new Knight(board
-                            .getElementAt(x2, y2).getColor(), x2, y2));
+                            .getElementAt(x2, y2).getColor(), x2, y2, board));
                     board.getElementAt(x2, y2).setPosition(x2, y2);
                     break;
                 }
                 case 3: {
                     board.setElementAt(x2, y2, new Bishop(board
-                            .getElementAt(x2, y2).getColor(), x2, y2));
+                            .getElementAt(x2, y2).getColor(), x2, y2, board));
                     board.getElementAt(x2, y2).setPosition(x2, y2);
                     break;
                 }
@@ -429,6 +382,8 @@ public class ChessLogics {
     }
 
     private boolean nPassant(int x1, int y1, int x2, int y2) {
+        Board board = GlobalState.getBoard();
+
         boolean positionCondition;
         boolean lastMoveCondition;
         if (!(board.getElementAt(x1, y1) instanceof Pawn))
@@ -454,52 +409,7 @@ public class ChessLogics {
         return false;
     }
 
-    public void saveGame(File outputPath) {
-        FileOutputStream fos;
-        ObjectOutputStream oos;
-        try {
-            fos = new FileOutputStream(outputPath);
-            oos = new ObjectOutputStream(fos);
-
-            oos.writeObject(board);
-            oos.writeObject(this.getLastMove());
-            oos.writeObject(this.getPlayerTurn());
-            oos.writeObject(this.getWhiteKing());
-            oos.writeObject(this.getBlackKing());
-            oos.writeBoolean(this.isCheckIsSet());
-            oos.close();
-            fos.close();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public void loadGame(File inputPath) {
-        FileInputStream fis;
-        ObjectInputStream ois;
-        try {
-            fis = new FileInputStream(inputPath);
-            ois = new ObjectInputStream(fis);
-
-            board = (Board) ois.readObject();
-            this.setLastMove((int[]) ois.readObject());
-            this.setPlayerTurn((String) ois.readObject());
-            this.setWhiteKing((int[]) ois.readObject());
-            this.setBlackKing((int[]) ois.readObject());
-            this.setCheckIsSet(ois.readBoolean());
-            fis.close();
-            ois.close();
-
-        } catch (ClassNotFoundException | IOException e) {
-
-            e.printStackTrace();
-        }
-
-    }
-
-    private void resetState() {
+    public void resetState() {
         this.setLastMove(new int[4]);
         this.setPlayerTurn("White");
         this.setCheckIsSet(false);

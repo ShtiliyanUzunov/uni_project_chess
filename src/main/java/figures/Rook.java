@@ -12,9 +12,7 @@ public class Rook extends Figure {
     private static final ImageIcon iconBlack = new ImageIcon(
             "images\\black_set\\Rook.png");
 
-    private final Board board = GlobalState.getBoard();
-
-    public Rook(String Col, int x, int y) {
+    public Rook(String Col, int x, int y, Board b) {
         moved = false;
 
         if (Col.equalsIgnoreCase("white"))
@@ -25,6 +23,7 @@ public class Rook extends Figure {
         super.color = Col;
         super.position[0] = x;
         super.position[1] = y;
+        super.board = b;
     }
 
     public void setAttacks() {

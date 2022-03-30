@@ -1,17 +1,12 @@
 package chess;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 import javax.swing.ImageIcon;
 
 import figures.*;
 
-public class Board {
+public class Board implements Serializable {
 
 	private final Figure[][] chessBoard = new Figure[8][8];
 
@@ -24,51 +19,49 @@ public class Board {
 
 		/* PAWNS */
 		for (int x = 0; x < 8; x++)
-			chessBoard[x][1] = new Pawn("White", x, 1);
+			chessBoard[x][1] = new Pawn("White", x, 1, this);
 
 		/* ROOKS */
-		chessBoard[0][0] = new Rook("White", 0, 0);
-		chessBoard[7][0] = new Rook("White", 7, 0);
+		chessBoard[0][0] = new Rook("White", 0, 0, this);
+		chessBoard[7][0] = new Rook("White", 7, 0, this);
 
 		/* KNIGHTS */
-		chessBoard[1][0] = new Knight("White", 1, 0);
-		chessBoard[6][0] = new Knight("White", 6, 0);
+		chessBoard[1][0] = new Knight("White", 1, 0, this);
+		chessBoard[6][0] = new Knight("White", 6, 0, this);
 
 		/* BISHOPS */
-		chessBoard[2][0] = new Bishop("White", 2, 0);
-		chessBoard[5][0] = new Bishop("White", 5, 0);
+		chessBoard[2][0] = new Bishop("White", 2, 0, this);
+		chessBoard[5][0] = new Bishop("White", 5, 0, this);
 
 		/* QUEEN */
-		chessBoard[3][0] = new Queen("White", 3, 0);
+		chessBoard[3][0] = new Queen("White", 3, 0, this);
 
 		/* KING */
-		chessBoard[4][0] = new King("White", 4, 0, new ImageIcon(
-				"images\\white_set\\King.png"));
+		chessBoard[4][0] = new King("White", 4, 0, this);
 
 		/* BLACK PIECES */
 
 		/* PAWNS */
 		for (int x = 0; x < 8; x++)
-			chessBoard[x][6] = new Pawn("Black", x, 6);
+			chessBoard[x][6] = new Pawn("Black", x, 6, this);
 
 		/* ROOKS */
-		chessBoard[0][7] = new Rook("Black", 0, 7);
-		chessBoard[7][7] = new Rook("Black", 7, 7);
+		chessBoard[0][7] = new Rook("Black", 0, 7, this);
+		chessBoard[7][7] = new Rook("Black", 7, 7, this);
 
 		/* KNIGHTS */
-		chessBoard[1][7] = new Knight("Black", 1, 7);
-		chessBoard[6][7] = new Knight("Black", 6, 7);
+		chessBoard[1][7] = new Knight("Black", 1, 7, this);
+		chessBoard[6][7] = new Knight("Black", 6, 7, this);
 
 		/* BISHOPS */
-		chessBoard[2][7] = new Bishop("Black", 2, 7);
-		chessBoard[5][7] = new Bishop("Black", 5, 7);
+		chessBoard[2][7] = new Bishop("Black", 2, 7, this);
+		chessBoard[5][7] = new Bishop("Black", 5, 7, this);
 
 		/* QUEEN */
-		chessBoard[3][7] = new Queen("Black", 3, 7);
+		chessBoard[3][7] = new Queen("Black", 3, 7, this);
 
 		/* KING */
-		chessBoard[4][7] = new King("Black", 4, 7, new ImageIcon(
-				"images\\black_set\\King.png"));
+		chessBoard[4][7] = new King("Black", 4, 7, this);
 
 		/* EMPTY FIELDS */
 		for (int x = 0; x < 8; x++) {

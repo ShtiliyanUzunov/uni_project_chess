@@ -9,15 +9,24 @@ import chess.GlobalState;
 
 public class King extends Figure {
 
-	public King(String Col, int x, int y, ImageIcon i) {
+	private static final ImageIcon iconWhite = new ImageIcon(
+			"images\\white_set\\King.png");
+	private static final ImageIcon iconBlack = new ImageIcon(
+			"images\\black_set\\King.png");
+
+	public King(String Col, int x, int y, Board b) {
+		if (Col.equalsIgnoreCase("white"))
+			this.icon = iconWhite;
+		else
+			this.icon = iconBlack;
+
 		moved = false;
-		super.icon = i;
 		super.color = Col;
 		super.position[0] = x;
 		super.position[1] = y;
+		super.board = b;
 	}
 
-	private final Board board = GlobalState.getBoard();
 	
 	public void setAttacks() {
 		board.Attacked(King.this.getX() + 1, King.this.getY(),

@@ -11,9 +11,7 @@ public class Pawn extends Figure {
 	private static final ImageIcon iconBlack = new ImageIcon(
 			"images\\black_set\\Pawn.png");
 
-	private final Board board = GlobalState.getBoard();
-
-	public Pawn(String Col, int x, int y) {
+	public Pawn(String Col, int x, int y, Board b) {
 		this.color = Col;
 
 		if (Col.equalsIgnoreCase("white"))
@@ -23,6 +21,7 @@ public class Pawn extends Figure {
 
 		this.position[0] = x;
 		this.position[1] = y;
+		super.board = b;
 	}
 
 	public void setAttacks(){

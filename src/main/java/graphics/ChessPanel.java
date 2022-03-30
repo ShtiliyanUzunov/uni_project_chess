@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 
 public class ChessPanel extends JPanel {
 
-    private final Board board = GlobalState.getBoard();
     private final ChessLogics chessLogics = GlobalState.getChessLogics();
     private ChessFrame parent;
 
@@ -31,6 +30,8 @@ public class ChessPanel extends JPanel {
 
     private class MA extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
+            Board board = GlobalState.getBoard();
+
             if (x1 < 0 && y1 < 0) {
                 x1 = e.getX() / 75;
                 y1 = 7 - e.getY() / 75;
@@ -70,6 +71,7 @@ public class ChessPanel extends JPanel {
     }
 
     public void paint(Graphics g) {
+        Board board = GlobalState.getBoard();
 
         ImageIcon Icon = new ImageIcon("images\\Board.png");
         Image temp = Icon.getImage();

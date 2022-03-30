@@ -38,7 +38,6 @@ public class ChessFrame extends JFrame {
         setSize(606, 652);
         setLocationRelativeTo(null);
         setResizable(false);
-
     }
 
     private void initializeFileChooser() {
@@ -60,7 +59,6 @@ public class ChessFrame extends JFrame {
         });
 
     }
-
 
     private void createMenuBar() {
         JMenuBar menu = new JMenuBar();
@@ -117,7 +115,6 @@ public class ChessFrame extends JFrame {
         about.addActionListener(e -> new AboutDialog());
     }
 
-
     private void setLoadGameAction() {
         loadGame.addActionListener(e -> {
             fileChooser.showOpenDialog(null);
@@ -129,7 +126,6 @@ public class ChessFrame extends JFrame {
         });
 
     }
-
 
     private void setSaveGameAction() {
         saveGame.addActionListener(e -> {
@@ -143,14 +139,12 @@ public class ChessFrame extends JFrame {
 
     }
 
-
     private void setNewGameAction() {
         newGame.addActionListener(e -> {
             eventBus.post(ChannelNames.UI_NEW_GAME, null);
             chessPanel.repaint();
         });
     }
-
 
     private void setQuitAction() {
         quit.addActionListener(e -> System.exit(0));
