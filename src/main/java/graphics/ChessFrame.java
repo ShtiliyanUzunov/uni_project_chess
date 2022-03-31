@@ -38,6 +38,8 @@ public class ChessFrame extends JFrame {
         setSize(606, 652);
         setLocationRelativeTo(null);
         setResizable(false);
+        PopupController popupController = new PopupController();
+        popupController.registerEvents();
 
     }
 
@@ -117,7 +119,6 @@ public class ChessFrame extends JFrame {
         about.addActionListener(e -> new AboutDialog());
     }
 
-
     private void setLoadGameAction() {
         loadGame.addActionListener(e -> {
             fileChooser.showOpenDialog(null);
@@ -129,7 +130,6 @@ public class ChessFrame extends JFrame {
         });
 
     }
-
 
     private void setSaveGameAction() {
         saveGame.addActionListener(e -> {

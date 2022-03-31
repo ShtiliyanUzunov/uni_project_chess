@@ -1,5 +1,6 @@
 package chess;
 
+import communication.ChannelNames;
 import communication.EventBus;
 import chess.figures.*;
 import graphics.ChessPanel;
@@ -26,51 +27,52 @@ public class BoardMovement {
     }
 
     // Main Move Function
-    public void moveFigure(int x1, int y1, int x2, int y2) {
+    public void moveFigure(int xFrom, int yFrom, int xTo, int yTo) {
         Board board = GlobalState.getBoard();
-        if (board.getElementAt(x1, y1) instanceof Field) {
+        if (board.getElementAt(xFrom, yFrom) instanceof Field) {
             ChessPanel.setCords(-1, -1, -1, -1);
             return;
         }
 
-        boolean nPassantCondition = nPassant(x1, y1, x2, y2)
-                || casteling(x1, y1, x2, y2);
+        boolean nPassantCondition = nPassant(xFrom, yFrom, xTo, yTo)
+                || casteling(xFrom, yFrom, xTo, yTo);
 
 
         boolean clearPathCondition =
-                isPathClear(x1, y1, x2, y2)
-                        && !isFigureFriendly(x1, y1, x2, y2)
-                        && board.getElementAt(x1, y1).isTargetLocationValid(x2, y2)
-                        && checkTurn(x1, y1)
-                        && discoverCheck(x1, y1, x2, y2);
+                isPathClear(xFrom, yFrom, xTo, yTo)
+                        && !isFigureFriendly(xFrom, yFrom, xTo, yTo)
+                        && board.getElementAt(xFrom, yFrom).isTargetLocationValid(xTo, yTo)
+                        && checkTurn(xFrom, yFrom)
+                        && discoverCheck(xFrom, yFrom, xTo, yTo);
 
         if (clearPathCondition || nPassantCondition) {
-            lastMove[0] = x1;
-            lastMove[1] = y1;
-            lastMove[2] = x2;
-            lastMove[3] = y2;
+            lastMove[0] = xFrom;
+            lastMove[1] = yFrom;
+            lastMove[2] = xTo;
+            lastMove[3] = yTo;
 
-            if (board.getElementAt(x1, y1) instanceof King) {
-                if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase("White")) {
-                    whiteKing[0] = x2;
-                    whiteKing[1] = y2;
+            if (board.getElementAt(xFrom, yFrom) instanceof King) {
+                if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase("White")) {
+                    whiteKing[0] = xTo;
+                    whiteKing[1] = yTo;
                 } else {
-                    blackKing[0] = x2;
-                    blackKing[1] = y2;
+                    blackKing[0] = xTo;
+                    blackKing[1] = yTo;
                 }
             }
             checkIsSet = false;
-            playerTurn = opositeColor(x1, y1);
-            board.getElementAt(x1, y1).setMoved(true);
-            board.getElementAt(x1, y1).setPosition(x2, y2);
-            board.setElementAt(x2, y2, board.getElementAt(x1, y1));
-            board.setElementAt(x1, y1, new Field());
-            eightRank(x2, y2);
+            playerTurn = opositeColor(xFrom, yFrom);
+            board.getElementAt(xFrom, yFrom).setMoved(true);
+            board.getElementAt(xFrom, yFrom).setPosition(xTo, yTo);
+            board.setElementAt(xTo, yTo, board.getElementAt(xFrom, yFrom));
+            board.setElementAt(xFrom, yFrom, new Field());
+            eightRank(xTo, yTo);
             board.nullBoardAttack();
             board.setBoardAttack();
 
-            if (kingChecked(x2, y2))
-                JOptionPane.showMessageDialog(null, "Check!");
+            if (kingChecked(xTo, yTo)) {
+                EventBus.getEventBus().post(ChannelNames.UI_CHECK, null);
+            }
 
         }
     }
@@ -161,52 +163,42 @@ public class BoardMovement {
         return false;
     }
 
-    public boolean isPathClear(int x1, int y1, int x2, int y2) {
+    public boolean isPathClear(int xFrom, int yFrom, int xTo, int yTo) {
         Board board = GlobalState.getBoard();
 
-        if (board.getElementAt(x1, y1) instanceof Knight)
+        if (board.getElementAt(xFrom, yFrom) instanceof Knight)
             return true;
 
         int temp1, temp2, temp3, temp4;
-        if (x1 == x2) {
-            if (y1 > y2) {
-                temp1 = y2;
-                temp2 = y1;
-            } else {
-                temp1 = y1;
-                temp2 = y2;
-            }
+        if (xFrom == xTo) {
+            temp1 = Math.min(yFrom, yTo);
+            temp2 = Math.max(yFrom, yTo);
             for (temp1 = temp1 + 1; temp1 < temp2; temp1++) {
-                if (!(board.getElementAt(x1, temp1) instanceof Field))
+                if (!(board.getElementAt(xFrom, temp1) instanceof Field))
                     return false;
             }
         }
 
-        if (y1 == y2) {
-            if (x1 > x2) {
-                temp1 = x2;
-                temp2 = x1;
-            } else {
-                temp1 = x1;
-                temp2 = x2;
-            }
+        if (yFrom == yTo) {
+            temp1 = Math.min(xFrom, xTo);
+            temp2 = Math.max(xFrom, xTo);
             for (temp1 = temp1 + 1; temp1 < temp2; temp1++) {
-                if (!(board.getElementAt(temp1, y1) instanceof Field))
+                if (!(board.getElementAt(temp1, yFrom) instanceof Field))
                     return false;
             }
         }
 
-        if (((x1 > x2) && (y1 > y2)) || ((x1 < x2) && (y1 < y2))) {
-            if (x1 > x2) {
-                temp1 = x2;
-                temp2 = x1;
-                temp3 = y2;
-                temp4 = y1;
+        if (((xFrom > xTo) && (yFrom > yTo)) || ((xFrom < xTo) && (yFrom < yTo))) {
+            if (xFrom > xTo) {
+                temp1 = xTo;
+                temp2 = xFrom;
+                temp3 = yTo;
+                temp4 = yFrom;
             } else {
-                temp1 = x1;
-                temp2 = x2;
-                temp3 = y1;
-                temp4 = y2;
+                temp1 = xFrom;
+                temp2 = xTo;
+                temp3 = yFrom;
+                temp4 = yTo;
             }
             for (temp1 = temp1 + 1, temp3 = temp3 + 1; temp1 < temp2
                     && temp3 < temp4; temp1++, temp3++) {
@@ -215,21 +207,21 @@ public class BoardMovement {
             }
         }
 
-        if (((x1 > x2) && (y1 < y2)) || ((x1 < x2) && (y1 > y2))) {
+        if (((xFrom > xTo) && (yFrom < yTo)) || ((xFrom < xTo) && (yFrom > yTo))) {
             // temp1 - po-malkoto x
             // temp 2 -po-golqmoto x
             // temp 3 - po-malkoto y
             // temp 4 - pogolqmoto y
-            if (x1 > x2) {
-                temp1 = x2;
-                temp2 = x1;
-                temp3 = y1;
-                temp4 = y2;
+            if (xFrom > xTo) {
+                temp1 = xTo;
+                temp2 = xFrom;
+                temp3 = yFrom;
+                temp4 = yTo;
             } else {
-                temp1 = x1;
-                temp2 = x2;
-                temp3 = y2;
-                temp4 = y1;
+                temp1 = xFrom;
+                temp2 = xTo;
+                temp3 = yTo;
+                temp4 = yFrom;
             }
             for (temp1 = temp1 + 1, temp4 = temp4 - 1; temp1 < temp2
                     && temp4 > temp3; temp1++, temp4--) {
@@ -237,79 +229,80 @@ public class BoardMovement {
                     return false;
             }
         }
+
         return true;
     }
 
-    private boolean checkTurn(int x1, int y1) {
+    private boolean checkTurn(int xFrom, int yFrom) {
         Board board = GlobalState.getBoard();
-        return board.getElementAt(x1, y1).getColor().equalsIgnoreCase(playerTurn);
+        return board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(playerTurn);
     }
 
-    private String opositeColor(int x1, int y1) {
+    private String opositeColor(int xFrom, int yFrom) {
         Board board = GlobalState.getBoard();
-        if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase("White"))
+        if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase("White"))
             return "Black";
         else
             return "White";
     }
 
-    private boolean isFigureFriendly(int x1, int y1, int x2, int y2) {
+    private boolean isFigureFriendly(int xFrom, int yFrom, int xTo, int yTo) {
         Board board = GlobalState.getBoard();
-        if (board.getElementAt(x2, y2) instanceof Field)
+        if (board.getElementAt(xTo, yTo) instanceof Field)
             return false;
-        return board.getElementAt(x1, y1).getColor().equalsIgnoreCase(board.getElementAt(x2, y2)
+        return board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(board.getElementAt(xTo, yTo)
                 .getColor());
     }
 
     // Special Moves Functions
-    private boolean casteling(int x1, int y1, int x2, int y2) {
+    private boolean casteling(int xFrom, int yFrom, int xTo, int yTo) {
         Board board = GlobalState.getBoard();
-        if (!(board.getElementAt(x1, y1) instanceof King))
+        if (!(board.getElementAt(xFrom, yFrom) instanceof King))
             return false;
-        if (board.getElementAt(x1, y1).isMoved())
+        if (board.getElementAt(xFrom, yFrom).isMoved())
             return false;
-        if (board.getElementAt(x1, y1).isAttByOpponent(
-                board.getElementAt(x1, y1).getColor()))
+        if (board.getElementAt(xFrom, yFrom).isAttByOpponent(
+                board.getElementAt(xFrom, yFrom).getColor()))
             return false;
-        if (!(Math.abs(x1 - x2) == 2 && y1 == y2))
+        if (!(Math.abs(xFrom - xTo) == 2 && yFrom == yTo))
             return false;
         boolean condSideEmpty;
         boolean condSideNotAtt;
         boolean rookNotMoved;
 
         // Queen Side Casteling
-        if (x1 > x2) {
-            condSideEmpty = board.getElementAt(x1 - 1, y1) instanceof Field
-                    && board.getElementAt(x1 - 2, y1) instanceof Field
-                    && board.getElementAt(x1 - 3, y1) instanceof Field;
-            condSideNotAtt = !board.getElementAt(x1 - 1, y1).isAttByOpponent(
-                    board.getElementAt(x1, y1).getColor())
-                    && !board.getElementAt(x1 - 2, y1).isAttByOpponent(
-                    board.getElementAt(x1, y1).getColor())
-                    && !board.getElementAt(x1 - 3, y1).isAttByOpponent(
-                    board.getElementAt(x1, y1).getColor());
-            rookNotMoved = !board.getElementAt(0, y1).isMoved()
-                    && board.getElementAt(0, y1) instanceof Rook;
+        if (xFrom > xTo) {
+            condSideEmpty = board.getElementAt(xFrom - 1, yFrom) instanceof Field
+                    && board.getElementAt(xFrom - 2, yFrom) instanceof Field
+                    && board.getElementAt(xFrom - 3, yFrom) instanceof Field;
+            condSideNotAtt = !board.getElementAt(xFrom - 1, yFrom).isAttByOpponent(
+                    board.getElementAt(xFrom, yFrom).getColor())
+                    && !board.getElementAt(xFrom - 2, yFrom).isAttByOpponent(
+                    board.getElementAt(xFrom, yFrom).getColor())
+                    && !board.getElementAt(xFrom - 3, yFrom).isAttByOpponent(
+                    board.getElementAt(xFrom, yFrom).getColor());
+            rookNotMoved = !board.getElementAt(0, yFrom).isMoved()
+                    && board.getElementAt(0, yFrom) instanceof Rook;
             if (condSideEmpty && condSideNotAtt && rookNotMoved) {
-                board.setElementAt(3, y1, board.getElementAt(0, y1));
-                board.setElementAt(0, y1, new Field());
+                board.setElementAt(3, yFrom, board.getElementAt(0, yFrom));
+                board.setElementAt(0, yFrom, new Field());
                 return true;
             }
         }
         // King Side Casteling
-        if (x1 < x2) {
-            condSideEmpty = board.getElementAt(x1 + 1, y1) instanceof Field
-                    && board.getElementAt(x1 + 2, y1) instanceof Field;
-            condSideNotAtt = !board.getElementAt(x1 + 1, y1).isAttByOpponent(
-                    board.getElementAt(x1, y1).getColor())
-                    && !board.getElementAt(x1 + 2, y1).isAttByOpponent(
-                    board.getElementAt(x1, y1).getColor());
-            rookNotMoved = !board.getElementAt(7, y1).isMoved()
-                    && board.getElementAt(7, y1) instanceof Rook;
+        if (xFrom < xTo) {
+            condSideEmpty = board.getElementAt(xFrom + 1, yFrom) instanceof Field
+                    && board.getElementAt(xFrom + 2, yFrom) instanceof Field;
+            condSideNotAtt = !board.getElementAt(xFrom + 1, yFrom).isAttByOpponent(
+                    board.getElementAt(xFrom, yFrom).getColor())
+                    && !board.getElementAt(xFrom + 2, yFrom).isAttByOpponent(
+                    board.getElementAt(xFrom, yFrom).getColor());
+            rookNotMoved = !board.getElementAt(7, yFrom).isMoved()
+                    && board.getElementAt(7, yFrom) instanceof Rook;
             if (condSideEmpty && condSideNotAtt && rookNotMoved) {
-                board.setElementAt(5, y1, board.getElementAt(7, y1));
-                board.getElementAt(5, y1).setPosition(5, y1);
-                board.setElementAt(7, y1, new Field());
+                board.setElementAt(5, yFrom, board.getElementAt(7, yFrom));
+                board.getElementAt(5, yFrom).setPosition(5, yFrom);
+                board.setElementAt(7, yFrom, new Field());
                 return true;
             }
         }
@@ -370,26 +363,26 @@ public class BoardMovement {
 
     }
 
-    private boolean nPassant(int x1, int y1, int x2, int y2) {
+    private boolean nPassant(int xFrom, int yFrom, int xTo, int yTo) {
         Board board = GlobalState.getBoard();
 
         boolean positionCondition;
         boolean lastMoveCondition;
-        if (!(board.getElementAt(x1, y1) instanceof Pawn))
+        if (!(board.getElementAt(xFrom, yFrom) instanceof Pawn))
             return false;
-        if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase("White")) {
-            positionCondition = (y1 == 4) && (y2 == 5) && (Math.abs(x1 - x2) == 1);
+        if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase("White")) {
+            positionCondition = (yFrom == 4) && (yTo == 5) && (Math.abs(xFrom - xTo) == 1);
             lastMoveCondition = (board.getElementAt(lastMove[2], lastMove[3]) instanceof Pawn)
                     && (Math.abs(lastMove[1] - lastMove[3]) == 2)
-                    && (x2 == lastMove[2]);
+                    && (xTo == lastMove[2]);
             if (positionCondition && lastMoveCondition) {
                 board.setElementAt(lastMove[2], lastMove[3], new Field());
                 return true;
             }
         } else {
-            positionCondition = (y1 == 3) && (y2 == 2) && (Math.abs(x1 - x2) == 1);
+            positionCondition = (yFrom == 3) && (yTo == 2) && (Math.abs(xFrom - xTo) == 1);
             lastMoveCondition = (board.getElementAt(lastMove[2], lastMove[3]) instanceof Pawn)
-                    && (Math.abs(lastMove[1] - lastMove[3]) == 2 && (x2 == lastMove[2]));
+                    && (Math.abs(lastMove[1] - lastMove[3]) == 2 && (xTo == lastMove[2]));
             if (positionCondition && lastMoveCondition) {
                 board.setElementAt(lastMove[2], lastMove[3], new Field());
                 return true;
@@ -402,10 +395,8 @@ public class BoardMovement {
         this.setLastMove(new int[4]);
         this.setPlayerTurn("White");
         this.setCheckIsSet(false);
-        int[] whiteKing = {4, 0};
-        int[] blackKing = {4, 7};
-        this.setWhiteKing(whiteKing);
-        this.setBlackKing(blackKing);
+        this.setWhiteKing(new int[] {4, 0});
+        this.setBlackKing(new int[] {4, 7});
     }
 
 }
