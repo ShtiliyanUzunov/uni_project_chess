@@ -1,9 +1,18 @@
 package chess.figures;
 
+import chess.util.Move;
+
+import java.util.List;
+
 public class Field extends Figure {
 
     @Override
-    public void setAttacks() { }
+    public void markAttacks() { }
+
+//    @Override
+//    public List<Move> getValidMoves() {
+//        return null;
+//    }
 
     @Override
     public boolean isTargetLocationValid(int x, int y) {

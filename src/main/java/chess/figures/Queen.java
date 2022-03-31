@@ -3,6 +3,7 @@ package chess.figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.util.Patterns;
 
 public class Queen extends Figure {
 
@@ -24,7 +25,7 @@ public class Queen extends Figure {
 	}
 
 	@Override
-	public void setAttacks() {
+	public void markAttacks() {
 		Patterns.applyDiagonalPatternFromPosition(this.getX(), this.getY(), this.getColor());
 		Patterns.applyHorizontalAndVerticalPatternFromPosition(this.getX(), this.getY(), this.getColor());
 	}

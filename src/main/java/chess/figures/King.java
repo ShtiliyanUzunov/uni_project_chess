@@ -28,7 +28,7 @@ public class King extends Figure {
     }
 
     @Override
-    public void setAttacks() {
+    public void markAttacks() {
         int[][] kingMovePattern = {
                 {1, -1}, {1, 0}, {1, 1},
                 {0, -1}, {0, 1},

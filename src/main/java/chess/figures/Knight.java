@@ -28,7 +28,7 @@ public class Knight extends Figure {
     }
 
     @Override
-    public void setAttacks() {
+    public void markAttacks() {
 		int[][] knightMovePattern = {
 				{2, 1}, {2, -1},
 				{1, 2}, {1, -2},

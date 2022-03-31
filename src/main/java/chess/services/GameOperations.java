@@ -1,5 +1,6 @@
-package chess;
+package chess.services;
 
+import chess.Board;
 import communication.ChannelNames;
 import communication.EventBus;
 
@@ -29,8 +30,8 @@ public class GameOperations {
     }
 
     private void newGame() {
-        GlobalState.getBoard().initializeBoard();
-        GlobalState.getBoardMovement().resetState();
+        GlobalContext.getBoard().initializeBoard();
+        GlobalContext.getBoardMovement().resetState();
     }
 
     private void saveGame(File outputPath) {
@@ -40,12 +41,9 @@ public class GameOperations {
             fos = new FileOutputStream(outputPath);
             oos = new ObjectOutputStream(fos);
 
-            oos.writeObject(GlobalState.getBoard());
-            oos.writeObject(GlobalState.getBoardMovement().getLastMove());
-            oos.writeObject(GlobalState.getBoardMovement().getPlayerTurn());
-            oos.writeObject(GlobalState.getBoardMovement().getWhiteKing());
-            oos.writeObject(GlobalState.getBoardMovement().getBlackKing());
-            oos.writeBoolean(GlobalState.getBoardMovement().isCheckIsSet());
+            oos.writeObject(GlobalContext.getBoard());
+            oos.writeObject(GlobalContext.getBoardMovement().getLastMove());
+            oos.writeObject(GlobalContext.getBoardMovement().getPlayerTurn());
             oos.close();
             fos.close();
 
@@ -62,17 +60,13 @@ public class GameOperations {
             fis = new FileInputStream(inputPath);
             ois = new ObjectInputStream(fis);
 
-            GlobalState.setBoard((Board) ois.readObject());
-            GlobalState.getBoardMovement().setLastMove((int[]) ois.readObject());
-            GlobalState.getBoardMovement().setPlayerTurn((String) ois.readObject());
-            GlobalState.getBoardMovement().setWhiteKing((int[]) ois.readObject());
-            GlobalState.getBoardMovement().setBlackKing((int[]) ois.readObject());
-            GlobalState.getBoardMovement().setCheckIsSet(ois.readBoolean());
+            GlobalContext.setBoard((Board) ois.readObject());
+            GlobalContext.getBoardMovement().setLastMove((int[]) ois.readObject());
+            GlobalContext.getBoardMovement().setPlayerTurn((String) ois.readObject());
             fis.close();
             ois.close();
 
         } catch (ClassNotFoundException | IOException e) {
-
             e.printStackTrace();
         }
 

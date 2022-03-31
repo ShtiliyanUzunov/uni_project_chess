@@ -2,6 +2,7 @@ package chess.figures;
 
 import javax.swing.ImageIcon;
 import chess.Board;
+import chess.util.Patterns;
 
 
 public class Rook extends Figure {
@@ -26,7 +27,7 @@ public class Rook extends Figure {
     }
 
     @Override
-    public void setAttacks() {
+    public void markAttacks() {
         Patterns.applyHorizontalAndVerticalPatternFromPosition(this.getX(), this.getY(), this.getColor());
     }
 

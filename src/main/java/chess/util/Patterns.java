@@ -1,7 +1,7 @@
-package chess.figures;
+package chess.util;
 
 import chess.Board;
-import chess.GlobalState;
+import chess.services.GlobalContext;
 
 import java.util.Arrays;
 
@@ -20,12 +20,12 @@ public class Patterns {
     };
 
     public static void applyHorizontalAndVerticalPatternFromPosition(int x, int y, String color) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
 
         Arrays.stream(horizontalAndVerticalPattern).forEach((pattern) -> {
             int targetX = (x + pattern[0]) % 8;
             int targetY = (y + pattern[1]) % 8;
-            if (GlobalState.getBoardMovement().isPathClear(x, y, targetX, targetY)) {
+            if (GlobalContext.getBoardMovement().isPathClear(x, y, targetX, targetY)) {
                 board.attacked(targetX, targetY, color);
             }
 
@@ -33,7 +33,7 @@ public class Patterns {
     }
 
     public static void applyDiagonalPatternFromPosition(int x, int y, String color) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
 
         Arrays.stream(diagonalPattern).forEach((pattern) -> {
             int targetX = x + pattern[0];
@@ -43,7 +43,7 @@ public class Patterns {
                 return;
             }
 
-            if (GlobalState.getBoardMovement().isPathClear(x, y, targetX, targetY)) {
+            if (GlobalContext.getBoardMovement().isPathClear(x, y, targetX, targetY)) {
                 board.attacked(targetX, targetY, color);
             }
         });

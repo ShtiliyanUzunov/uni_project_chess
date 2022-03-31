@@ -1,12 +1,11 @@
 package chess.figures;
 
 import java.lang.Math;
-import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 
 import chess.Board;
-import chess.GlobalState;
+import chess.util.Patterns;
 
 public class Bishop extends Figure {
 
@@ -28,7 +27,7 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public void setAttacks() {
+    public void markAttacks() {
         Patterns.applyDiagonalPatternFromPosition(this.getX(), this.getY(), this.getColor());
     }
 

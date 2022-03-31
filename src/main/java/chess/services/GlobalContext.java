@@ -1,6 +1,9 @@
-package chess;
+package chess.services;
 
-public class GlobalState {
+import chess.Board;
+import chess.BoardMovement;
+
+public class GlobalContext {
 
     private static Board board;
     private static BoardMovement boardMovement;

@@ -2,6 +2,7 @@ package graphics;
 
 import chess.figures.Field;
 import chess.*;
+import chess.services.GlobalContext;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,7 +14,7 @@ import javax.swing.JPanel;
 
 public class ChessPanel extends JPanel {
 
-    private final BoardMovement boardMovement = GlobalState.getBoardMovement();
+    private final BoardMovement boardMovement = GlobalContext.getBoardMovement();
     private ChessFrame parent;
 
     private static int xFrom = -1, xTo = -1, yFrom = -1, yTo = -1;
@@ -40,7 +41,7 @@ public class ChessPanel extends JPanel {
 
     private class MA extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
-            Board board = GlobalState.getBoard();
+            Board board = GlobalContext.getBoard();
 
             if (xFrom < 0 && yFrom < 0) {
                 xFrom = e.getX() / 75;
@@ -76,7 +77,7 @@ public class ChessPanel extends JPanel {
     }
 
     public void paint(Graphics g) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
 
         ImageIcon Icon = new ImageIcon("images\\Board.png");
         Image temp = Icon.getImage();

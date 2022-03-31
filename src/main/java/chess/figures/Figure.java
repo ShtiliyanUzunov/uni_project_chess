@@ -1,6 +1,7 @@
 package chess.figures;
 
 import chess.Board;
+import chess.util.Move;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,18 +26,33 @@ public abstract class Figure implements Serializable {
     public abstract boolean isTargetLocationValid(int x, int y);
 
     //Attacking functions
-    public abstract void setAttacks();
+    public abstract void markAttacks();
 
-    public void resetAttack() {
+//    public abstract List<Move> getValidMoves();
+
+    public void nullAttack() {
         isAttByWhite = false;
         isAttByBlack = false;
     }
 
-    public boolean isAttByOpponent(String figureColor) {
-        if (figureColor.equalsIgnoreCase("white") && isAttByBlack)
+    public boolean isAttByOpponent() {
+        if (color.equalsIgnoreCase("white") && isAttByBlack)
             return true;
 
-        return figureColor.equalsIgnoreCase("black") && isAttByWhite;
+        return color.equalsIgnoreCase("black") && isAttByWhite;
+    }
+
+    /**
+     * This is used to check empty fields (that are not marked with player color)
+     * in the case of casteling.
+     * @param playerColor
+     * @return
+     */
+    public boolean isAttByOpponent(String playerColor) {
+        if (playerColor.equalsIgnoreCase("white") && isAttByBlack)
+            return true;
+
+        return playerColor.equalsIgnoreCase("black") && isAttByWhite;
     }
 
     public void setAttackedBy(String Color) {

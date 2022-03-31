@@ -1,5 +1,6 @@
 package chess;
 
+import chess.services.GlobalContext;
 import communication.ChannelNames;
 import communication.EventBus;
 import chess.figures.*;
@@ -18,9 +19,6 @@ public class BoardMovement {
     //Last Move[0] = last x, Last Move[1] = last y, Last Move[2] = new x, Last Move[3] = new y
     private int[] lastMove;
     private String playerTurn;
-    private boolean checkIsSet;
-    private int[] whiteKing;
-    private int[] blackKing;
 
     public BoardMovement() {
         this.resetState();
@@ -28,143 +26,116 @@ public class BoardMovement {
 
     // Main Move Function
     public void moveFigure(int xFrom, int yFrom, int xTo, int yTo) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
         if (board.getElementAt(xFrom, yFrom) instanceof Field) {
             ChessPanel.setCords(-1, -1, -1, -1);
             return;
         }
 
-        boolean nPassantCondition = nPassant(xFrom, yFrom, xTo, yTo)
+        boolean specialMoveCondition = nPassant(xFrom, yFrom, xTo, yTo)
                 || casteling(xFrom, yFrom, xTo, yTo);
 
 
         boolean clearPathCondition =
                 isPathClear(xFrom, yFrom, xTo, yTo)
-                        && !isFigureFriendly(xFrom, yFrom, xTo, yTo)
+                        && !isTargetFigureFriendly(xFrom, yFrom, xTo, yTo)
                         && board.getElementAt(xFrom, yFrom).isTargetLocationValid(xTo, yTo)
                         && checkTurn(xFrom, yFrom)
                         && discoverCheck(xFrom, yFrom, xTo, yTo);
 
-        if (clearPathCondition || nPassantCondition) {
-            lastMove[0] = xFrom;
-            lastMove[1] = yFrom;
-            lastMove[2] = xTo;
-            lastMove[3] = yTo;
+        if (clearPathCondition || specialMoveCondition) {
+            setLastMove(new int[]{xFrom, yFrom, xTo, yTo});
 
-            if (board.getElementAt(xFrom, yFrom) instanceof King) {
-                if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase("White")) {
-                    whiteKing[0] = xTo;
-                    whiteKing[1] = yTo;
-                } else {
-                    blackKing[0] = xTo;
-                    blackKing[1] = yTo;
-                }
-            }
-            checkIsSet = false;
             playerTurn = opositeColor(xFrom, yFrom);
             board.getElementAt(xFrom, yFrom).setMoved(true);
             board.getElementAt(xFrom, yFrom).setPosition(xTo, yTo);
             board.setElementAt(xTo, yTo, board.getElementAt(xFrom, yFrom));
             board.setElementAt(xFrom, yFrom, new Field());
             eightRank(xTo, yTo);
-            board.nullBoardAttack();
-            board.setBoardAttack();
 
-            if (kingChecked(xTo, yTo)) {
+            board.markBoardAttacks();
+
+            if (kingChecked()) {
                 EventBus.getEventBus().post(ChannelNames.UI_CHECK, null);
             }
-
         }
     }
 
-    private boolean discoverCheck(int x1, int y1, int x2, int y2) {
-        Board board = GlobalState.getBoard();
+    private boolean discoverCheck(int xFrom, int yFrom, int xTo, int yTo) {
+        Board board = GlobalContext.getBoard();
 
-        if (board.getElementAt(x1, y1) instanceof King) {
-            String myColor = board.getElementAt(x1, y1).getColor();
-            Figure temp1 = board.getElementAt(x1, y1);
-            Figure temp2 = board.getElementAt(x2, y2);
-            board.setElementAt(x1, y1, new Field());
-            board.setElementAt(x2, y2, temp1);
-            board.nullBoardAttack();
-            board.setBoardAttack();
-            if (board.getElementAt(x2, y2).isAttByOpponent(myColor)) {
-                board.setElementAt(x1, y1, temp1);
-                board.setElementAt(x2, y2, temp2);
-                board.nullBoardAttack();
-                board.setBoardAttack();
+        if (board.getElementAt(xFrom, yFrom) instanceof King) {
+            Figure temp1 = board.getElementAt(xFrom, yFrom);
+            Figure temp2 = board.getElementAt(xTo, yTo);
+
+            board.setElementAt(xFrom, yFrom, new Field());
+            board.setElementAt(xTo, yTo, temp1);
+            board.markBoardAttacks();
+
+            if (board.getElementAt(xTo, yTo).isAttByOpponent()) {
+                board.setElementAt(xFrom, yFrom, temp1);
+                board.setElementAt(xTo, yTo, temp2);
+                board.markBoardAttacks();
                 return false;
             } else {
-                board.setElementAt(x1, y1, temp1);
-                board.setElementAt(x2, y2, temp2);
-                board.nullBoardAttack();
-                board.setBoardAttack();
+                board.setElementAt(xFrom, yFrom, temp1);
+                board.setElementAt(xTo, yTo, temp2);
+                board.markBoardAttacks();
                 return true;
             }
         }
 
-        Figure temp1 = board.getElementAt(x1, y1);
-        Figure temp2 = board.getElementAt(x2, y2);
-        String color = board.getElementAt(x1, y1).getColor();
-        board.setElementAt(x1, y1, new Field());
-        board.setElementAt(x2, y2, temp1);
-        board.nullBoardAttack();
-        board.setBoardAttack();
+        Figure temp1 = board.getElementAt(xFrom, yFrom);
+        Figure temp2 = board.getElementAt(xTo, yTo);
+        String color = board.getElementAt(xFrom, yFrom).getColor();
+
+        board.setElementAt(xFrom, yFrom, new Field());
+        board.setElementAt(xTo, yTo, temp1);
+        board.markBoardAttacks();
+
         if (color.equalsIgnoreCase("White")) {
-            if (board.getElementAt(whiteKing[0], whiteKing[1]).isAttByOpponent(
-                    "White")) {
-                board.setElementAt(x1, y1, temp1);
-                board.setElementAt(x2, y2, temp2);
-                board.nullBoardAttack();
-                board.setBoardAttack();
+            if (board.getWhiteKing().isAttByOpponent()) {
+                board.setElementAt(xFrom, yFrom, temp1);
+                board.setElementAt(xTo, yTo, temp2);
+                board.markBoardAttacks();
                 return false;
             } else {
-                board.setElementAt(x1, y1, temp1);
-                board.setElementAt(x2, y2, temp2);
-                board.nullBoardAttack();
-                board.setBoardAttack();
+                board.setElementAt(xFrom, yFrom, temp1);
+                board.setElementAt(xTo, yTo, temp2);
+                board.markBoardAttacks();
                 return true;
             }
         } else {
-            if (board.getElementAt(blackKing[0], blackKing[1]).isAttByOpponent(
-                    "Black")) {
-                board.setElementAt(x1, y1, temp1);
-                board.setElementAt(x2, y2, temp2);
-                board.nullBoardAttack();
-                board.setBoardAttack();
+            if (board.getBlackKing().isAttByOpponent()) {
+                board.setElementAt(xFrom, yFrom, temp1);
+                board.setElementAt(xTo, yTo, temp2);
+                board.markBoardAttacks();
                 return false;
             } else {
-                board.setElementAt(x1, y1, temp1);
-                board.setElementAt(x2, y2, temp2);
-                board.nullBoardAttack();
-                board.setBoardAttack();
+                board.setElementAt(xFrom, yFrom, temp1);
+                board.setElementAt(xTo, yTo, temp2);
+                board.markBoardAttacks();
                 return true;
             }
         }
 
     }
 
-    private boolean kingChecked(int x1, int y1) {
-        Board board = GlobalState.getBoard();
+    private boolean kingChecked() {
+        Board board = GlobalContext.getBoard();
 
-        if (board.getElementAt(x1, y1).getColor().equalsIgnoreCase("White")) {
-            if (board.getElementAt(blackKing[0], blackKing[1]).isAttByOpponent(
-                    "Black")) {
-                checkIsSet = true;
-                return true;
-            }
-        } else {
-            if (board.getElementAt(whiteKing[0], whiteKing[1]).isAttByOpponent(
-                    "White")) {
-                checkIsSet = true;
-                return true;
-            }
+        Figure king = playerTurn.equalsIgnoreCase("white") ?
+                board.getWhiteKing() : board.getBlackKing();
+
+        if (king.isAttByOpponent()) {
+            return true;
         }
+
         return false;
     }
 
     public boolean isPathClear(int xFrom, int yFrom, int xTo, int yTo) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
 
         if (board.getElementAt(xFrom, yFrom) instanceof Knight)
             return true;
@@ -234,20 +205,20 @@ public class BoardMovement {
     }
 
     private boolean checkTurn(int xFrom, int yFrom) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
         return board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(playerTurn);
     }
 
     private String opositeColor(int xFrom, int yFrom) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
         if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase("White"))
             return "Black";
         else
             return "White";
     }
 
-    private boolean isFigureFriendly(int xFrom, int yFrom, int xTo, int yTo) {
-        Board board = GlobalState.getBoard();
+    private boolean isTargetFigureFriendly(int xFrom, int yFrom, int xTo, int yTo) {
+        Board board = GlobalContext.getBoard();
         if (board.getElementAt(xTo, yTo) instanceof Field)
             return false;
         return board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(board.getElementAt(xTo, yTo)
@@ -256,7 +227,7 @@ public class BoardMovement {
 
     // Special Moves Functions
     private boolean casteling(int xFrom, int yFrom, int xTo, int yTo) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
         if (!(board.getElementAt(xFrom, yFrom) instanceof King))
             return false;
         if (board.getElementAt(xFrom, yFrom).isMoved())
@@ -312,7 +283,7 @@ public class BoardMovement {
 
 
     private void eightRank(int x2, int y2) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
 
         if (!(board.getElementAt(x2, y2) instanceof Pawn)) {
             return;
@@ -364,7 +335,7 @@ public class BoardMovement {
     }
 
     private boolean nPassant(int xFrom, int yFrom, int xTo, int yTo) {
-        Board board = GlobalState.getBoard();
+        Board board = GlobalContext.getBoard();
 
         boolean positionCondition;
         boolean lastMoveCondition;
@@ -394,9 +365,6 @@ public class BoardMovement {
     public void resetState() {
         this.setLastMove(new int[4]);
         this.setPlayerTurn("White");
-        this.setCheckIsSet(false);
-        this.setWhiteKing(new int[] {4, 0});
-        this.setBlackKing(new int[] {4, 7});
     }
 
 }

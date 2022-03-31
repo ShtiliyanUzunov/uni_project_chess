@@ -25,7 +25,7 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public void setAttacks() {
+    public void markAttacks() {
         if (this.color.equalsIgnoreCase("White")) {
             board.attacked(this.getX() + 1, this.getY() + 1, "White");
             board.attacked(this.getX() - 1, this.getY() + 1, "White");
