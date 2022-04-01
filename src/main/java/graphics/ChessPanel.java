@@ -51,7 +51,7 @@ public class ChessPanel extends JPanel {
                     nullifyFromSelection();
                     return;
                 }
-                if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(boardMovement.getPlayerTurn()))
+                if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(board.getPlayerTurn()))
                     indicatorSelect = true;
                 else {
                     nullifyFromSelection();
@@ -67,13 +67,6 @@ public class ChessPanel extends JPanel {
             }
             repaint();
         }
-    }
-
-    public static void setCords(int a, int b, int c, int d) {
-        xFrom = a;
-        yFrom = b;
-        xTo = c;
-        yTo = d;
     }
 
     public void paint(Graphics g) {

@@ -25,7 +25,7 @@ public class Board implements Serializable {
 
 	// Main Initializing Function
 	public void initializeBoard() {
-		lastMove = new int[2];
+		lastMove = new int[4];
 		playerTurn = "White";
 
 		/*

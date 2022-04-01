@@ -21,13 +21,8 @@ import java.util.function.Function;
 public class BoardMovement {
 
     private EventBus eventBus = EventBus.getEventBus();
-
-
-//    private int[] lastMove;
-    //private String playerTurn;
     private CollisionChecker collisionChecker = new CollisionChecker();
     private List<Function<Void, Void>> moveCallbacks = new ArrayList<>();
-
 
     // Main Move Function
     @NotPureFunction
