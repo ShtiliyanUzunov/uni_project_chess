@@ -4,6 +4,7 @@ import java.io.*;
 
 import chess.figures.*;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Board implements Serializable {
 
@@ -14,8 +15,18 @@ public class Board implements Serializable {
 	@Getter
 	private Figure blackKing;
 
+	@Getter
+	@Setter
+	private int[] lastMove;
+
+	@Getter
+	@Setter
+	private String playerTurn;
+
 	// Main Initializing Function
 	public void initializeBoard() {
+		lastMove = new int[2];
+		playerTurn = "White";
 
 		/*
 		 * White pieces
@@ -108,6 +119,7 @@ public class Board implements Serializable {
 
 	public void setElementAt(int x, int y, Figure fig) {
 		chessBoard[x][y] = fig;
+		fig.setPosition(x, y);
 	}
 
 }

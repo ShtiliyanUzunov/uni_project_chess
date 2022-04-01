@@ -22,7 +22,7 @@ public class Field extends Figure {
     public Field() {
         icon = null;
         color = null;
-        position = null;
+        position = new int[2];
         isAttByWhite = false;
         isAttByBlack = false;
     }

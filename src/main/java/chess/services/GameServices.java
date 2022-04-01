@@ -6,11 +6,13 @@ import communication.EventBus;
 
 import java.io.*;
 
-public class GameOperations {
+public class GameServices {
 
     private EventBus eventBus = EventBus.getEventBus();
 
-    public GameOperations () {
+    private History history = new History();
+
+    public GameServices() {
         eventBus.register(ChannelNames.UI_NEW_GAME, (Object param) -> {
             this.newGame();
             return null;
@@ -27,11 +29,15 @@ public class GameOperations {
             this.loadGame(p);
             return null;
         });
+
+        eventBus.register(ChannelNames.NEW_MOVE, (Object param) -> {
+            history.saveBoardState();
+            return null;
+        });
     }
 
     private void newGame() {
         GlobalContext.getBoard().initializeBoard();
-        GlobalContext.getBoardMovement().resetState();
     }
 
     private void saveGame(File outputPath) {
@@ -42,8 +48,6 @@ public class GameOperations {
             oos = new ObjectOutputStream(fos);
 
             oos.writeObject(GlobalContext.getBoard());
-            oos.writeObject(GlobalContext.getBoardMovement().getLastMove());
-            oos.writeObject(GlobalContext.getBoardMovement().getPlayerTurn());
             oos.close();
             fos.close();
 
@@ -61,8 +65,6 @@ public class GameOperations {
             ois = new ObjectInputStream(fis);
 
             GlobalContext.setBoard((Board) ois.readObject());
-            GlobalContext.getBoardMovement().setLastMove((int[]) ois.readObject());
-            GlobalContext.getBoardMovement().setPlayerTurn((String) ois.readObject());
             fis.close();
             ois.close();
 

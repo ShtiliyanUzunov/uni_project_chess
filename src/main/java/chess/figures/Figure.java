@@ -36,6 +36,11 @@ public abstract class Figure implements Serializable {
     }
 
     public boolean isAttByOpponent() {
+        if (this instanceof Field) {
+            throw new IllegalArgumentException("Fields don't have color marks. " +
+                    "Use this method only if you are 100% sure that you are referencing a figure.");
+        }
+
         if (color.equalsIgnoreCase("white") && isAttByBlack)
             return true;
 
@@ -45,6 +50,7 @@ public abstract class Figure implements Serializable {
     /**
      * This is used to check empty fields (that are not marked with player color)
      * in the case of casteling.
+     *
      * @param playerColor
      * @return
      */

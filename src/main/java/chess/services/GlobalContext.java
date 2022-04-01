@@ -7,14 +7,14 @@ public class GlobalContext {
 
     private static Board board;
     private static BoardMovement boardMovement;
-    private static GameOperations gameOperations;
+    private static GameServices gameServices;
 
 
     static {
         boardMovement = new BoardMovement();
         board = new Board();
         board.initializeBoard();
-        gameOperations = new GameOperations();
+        gameServices = new GameServices();
     }
 
     public static Board getBoard() {
