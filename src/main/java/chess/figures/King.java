@@ -1,11 +1,20 @@
 package chess.figures;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.BoardMovement;
+import chess.services.GlobalContext;
+import chess.util.Move;
+
+import static chess.util.Patterns.kingMovePattern;
 
 public class King extends Figure {
 
@@ -29,16 +38,28 @@ public class King extends Figure {
 
     @Override
     public void markAttacks() {
-        int[][] kingMovePattern = {
-                {1, -1}, {1, 0}, {1, 1},
-                {0, -1}, {0, 1},
-                {-1, -1}, {-1, 0}, {-1, 1}
-        };
-
         Arrays.stream(kingMovePattern).forEach((pattern) -> {
             board.attacked(this.getX() + pattern[0], this.getY() + pattern[1], this.getColor());
         });
 
+    }
+
+    @Override
+    public List<Move> getValidMoves() {
+        BoardMovement boardMovement = GlobalContext.getBoardMovement();
+
+        //Add casteling moves to pattern.
+        List<int[]> moves = Arrays.stream(kingMovePattern).collect(Collectors.toList());
+        moves.add(new int[] {2, 0});
+        moves.add(new int[] {-2, 0});
+
+        return moves.stream().filter((pattern) -> {
+            int xFrom = getX();
+            int yFrom = getY();
+            int xTo = xFrom + pattern[0];
+            int yTo = yFrom + pattern[1];
+            return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1])).collect(Collectors.toList());
     }
 
     @Override

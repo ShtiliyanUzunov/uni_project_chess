@@ -3,7 +3,19 @@ package chess.figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.BoardMovement;
+import chess.services.GlobalContext;
+import chess.util.Move;
 import chess.util.Patterns;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static chess.util.Patterns.diagonalPattern;
+import static chess.util.Patterns.horizontalAndVerticalPattern;
 
 public class Queen extends Figure {
 
@@ -28,6 +40,24 @@ public class Queen extends Figure {
 	public void markAttacks() {
 		Patterns.applyDiagonalPatternFromPosition(this.getX(), this.getY(), this.getColor());
 		Patterns.applyHorizontalAndVerticalPatternFromPosition(this.getX(), this.getY(), this.getColor());
+	}
+
+	@Override
+	public List<Move> getValidMoves() {
+		BoardMovement boardMovement = GlobalContext.getBoardMovement();
+
+		List<int[]> patterns = new ArrayList<>();
+		Collections.addAll(patterns, horizontalAndVerticalPattern);
+		Collections.addAll(patterns, diagonalPattern);
+
+		return patterns.stream().filter((pattern) -> {
+			int xFrom = getX();
+			int yFrom = getY();
+			int xTo = (xFrom + pattern[0]) % 8;
+			int yTo = (yFrom + pattern[1]) % 8;
+			return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
+		}).map(pattern -> new Move(getX(), getY(), (getX() + pattern[0]) % 8, (getY() + pattern[1]) % 8)).collect(Collectors.toList());
+
 	}
 
 	@Override

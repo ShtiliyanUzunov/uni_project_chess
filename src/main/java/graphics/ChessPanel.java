@@ -3,11 +3,13 @@ package graphics;
 import chess.figures.Field;
 import chess.*;
 import chess.services.GlobalContext;
+import chess.util.Move;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.ImageIcon;
 
 import javax.swing.JPanel;
@@ -19,6 +21,7 @@ public class ChessPanel extends JPanel {
 
     private static int xFrom = -1, xTo = -1, yFrom = -1, yTo = -1;
     private boolean indicatorSelect = false;
+    private final Image moveOption = new ImageIcon("images\\Move_Option.png").getImage();
     private final Image select = new ImageIcon("images\\Select.png").getImage();
     private final Image attByWhite = new ImageIcon("images\\AttByWhite.png").getImage();
     private final Image attByBlack = new ImageIcon("images\\AttByBlack.png").getImage();
@@ -26,6 +29,7 @@ public class ChessPanel extends JPanel {
     ChessPanel(ChessFrame parent) {
         super();
         this.parent = parent;
+        setSize(600 , 600);
         addMouseListener(new MA());
     }
 
@@ -94,6 +98,17 @@ public class ChessPanel extends JPanel {
             }
         if (indicatorSelect) {
             g.drawImage(select, xFrom * 75, 525 - yFrom * 75, null);
+
+            if (parent.getShowAvailableMoves().getState()) {
+                List<Move> availableMoves = board.getElementAt(xFrom, yFrom).getValidMoves();
+                availableMoves.forEach(move -> {
+                    int[] targetPosition = move.getTargetPosition();
+                    int x = targetPosition[0];
+                    int y = targetPosition[1];
+                    g.drawImage(moveOption, x * 75, 525 - y * 75, null);
+                });
+
+            }
         }
 
     }

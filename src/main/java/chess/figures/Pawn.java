@@ -3,6 +3,16 @@ package chess.figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.BoardMovement;
+import chess.services.GlobalContext;
+import chess.util.Move;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static chess.util.Patterns.knightMovePattern;
 
 public class Pawn extends Figure {
 
@@ -33,6 +43,25 @@ public class Pawn extends Figure {
             board.attacked(this.getX() + 1, this.getY() - 1, "Black");
             board.attacked(this.getX() - 1, this.getY() - 1, "Black");
         }
+    }
+
+    @Override
+    public List<Move> getValidMoves() {
+        BoardMovement boardMovement = GlobalContext.getBoardMovement();
+        int moveVector = color.equalsIgnoreCase("white") ? 1: -1;
+
+        int[][] pawnPattern = {
+                {0, 1}, {0, 2}, {-1, 1}, {1, 1}
+        };
+
+        return Arrays.stream(pawnPattern).filter((pattern) -> {
+            int xFrom = getX();
+            int yFrom = getY();
+            int xTo = xFrom + pattern[0];
+            int yTo = yFrom + (moveVector * pattern[1]);
+            return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + moveVector * pattern[1])).collect(Collectors.toList());
+
     }
 
     @Override

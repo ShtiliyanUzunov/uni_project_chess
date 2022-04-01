@@ -6,11 +6,13 @@ import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.io.File;
 
 public class ChessFrame extends JFrame {
 
     private final ChessPanel chessPanel;
+    private final InfoPanel infoPanel;
 
     private JMenuItem quit;
     private JMenuItem about;
@@ -32,10 +34,18 @@ public class ChessFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initializeFileChooser();
         createMenuBar();
+
+
+        BorderLayout l = new BorderLayout();
+        setLayout(l);
+
         add(chessPanel = new ChessPanel(this));
+        add(infoPanel = new InfoPanel(this),BorderLayout.EAST);
+
+
         setTitle("Chess Game");
         setVisible(true);
-        setSize(606, 652);
+        setSize(900, 660);
         setLocationRelativeTo(null);
         setResizable(false);
         PopupController popupController = new PopupController();
@@ -73,8 +83,8 @@ public class ChessFrame extends JFrame {
 
         JMenu viewMenu;
         menu.add(viewMenu = new JMenu("View"));
-        viewMenu.add(showAttacks = new JCheckBoxMenuItem("Show attacks" ,null, false));
-        viewMenu.add(showAvailableMoves = new JCheckBoxMenuItem("Show available moves" ,null, false));
+        viewMenu.add(showAttacks = new JCheckBoxMenuItem("Show attacks", null, false));
+        viewMenu.add(showAvailableMoves = new JCheckBoxMenuItem("Show available moves", null, true));
         setShowAttacksAction();
         setShowAvailableMovesAction();
 
@@ -137,7 +147,7 @@ public class ChessFrame extends JFrame {
             File output = fileChooser.getSelectedFile();
 
             if (output != null) {
-            	eventBus.post(ChannelNames.UI_SAVE_GAME, output);
+                eventBus.post(ChannelNames.UI_SAVE_GAME, output);
             }
         });
 

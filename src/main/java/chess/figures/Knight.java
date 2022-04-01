@@ -1,11 +1,19 @@
 package chess.figures;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.BoardMovement;
+import chess.services.GlobalContext;
+import chess.util.Move;
+
+import static chess.util.Patterns.knightMovePattern;
 
 public class Knight extends Figure {
 
@@ -29,16 +37,22 @@ public class Knight extends Figure {
 
     @Override
     public void markAttacks() {
-		int[][] knightMovePattern = {
-				{2, 1}, {2, -1},
-				{1, 2}, {1, -2},
-				{-1, 2}, {-1, -2},
-				{-2, 1}, {-2, -1}
-		};
-
 		Arrays.stream(knightMovePattern).forEach((pattern) -> {
 			board.attacked(this.getX() + pattern[0], this.getY() + pattern[1], this.getColor());
 		});
+    }
+
+    @Override
+    public List<Move> getValidMoves() {
+        BoardMovement boardMovement = GlobalContext.getBoardMovement();
+
+        return Arrays.stream(knightMovePattern).filter((pattern) -> {
+            int xFrom = getX();
+            int yFrom = getY();
+            int xTo = xFrom + pattern[0];
+            int yTo = yFrom + pattern[1];
+            return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1])).collect(Collectors.toList());
     }
 
 

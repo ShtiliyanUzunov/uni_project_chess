@@ -28,7 +28,7 @@ public abstract class Figure implements Serializable {
     //Attacking functions
     public abstract void markAttacks();
 
-//    public abstract List<Move> getValidMoves();
+    public abstract List<Move> getValidMoves();
 
     public void nullAttack() {
         isAttByWhite = false;

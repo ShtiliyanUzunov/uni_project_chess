@@ -70,6 +70,10 @@ public class BoardMovement {
     public boolean isMoveValid(int xFrom, int yFrom, int xTo, int yTo, boolean addCallbacks) {
         Board board = GlobalContext.getBoard();
 
+        if (!validCoordinates(xFrom, yFrom, xTo, yTo)) {
+            return false;
+        }
+
         boolean specialMoveCondition = nPassant(xFrom, yFrom, xTo, yTo, addCallbacks)
                 || casteling(xFrom, yFrom, xTo, yTo, addCallbacks);
 
@@ -81,6 +85,17 @@ public class BoardMovement {
                         && checkTurn(xFrom, yFrom);
 
         return isNotCheckedAfterMove && (normalMoveCondition || specialMoveCondition);
+    }
+
+    @PureFunction
+    private boolean validCoordinates(int xFrom, int yFrom, int xTo, int yTo) {
+        return indexInBoardRange(xFrom) && indexInBoardRange(yFrom) && indexInBoardRange(xTo)
+                && indexInBoardRange(yTo);
+    }
+
+    @PureFunction
+    private boolean indexInBoardRange(int index) {
+        return 0 <= index && index <= 7;
     }
 
     @PureFunction
@@ -276,7 +291,9 @@ public class BoardMovement {
             return false;
 
         int pawnMoveVector = board.getPlayerTurn().equalsIgnoreCase("White") ? 1 : -1;
-        boolean currentMoveCondition = (yTo - yFrom) * pawnMoveVector == 1 && (Math.abs(xFrom - xTo) == 1);
+        int rankRequired =  board.getPlayerTurn().equalsIgnoreCase("White") ? 4 : 3;
+        boolean currentMoveCondition = (yTo - yFrom) * pawnMoveVector == 1 && (Math.abs(xFrom - xTo) == 1)
+                && yFrom == rankRequired;
         boolean lastMoveCondition = (board.getElementAt(lastMove[2], lastMove[3]) instanceof Pawn)
                 && (Math.abs(lastMove[1] - lastMove[3]) == 2)
                 && (xTo == lastMove[2]);
