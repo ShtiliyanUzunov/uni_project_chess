@@ -50,7 +50,7 @@ public class BoardMovement {
 
         eventBus.post(ChannelNames.MOVE_FINISHED, null);
         long end = System.currentTimeMillis();
-        System.out.println(String.format("Move exec time: %d", end - start));
+        System.out.printf("Move exec time: %d%n", end - start);
     }
 
     @NotPureFunction
@@ -112,65 +112,42 @@ public class BoardMovement {
         board.setElementAt(xTo, yTo, figureSource);
 
         Figure king = board.getKingInTurn();
+
+        int pawnDirection = king.getColor().equalsIgnoreCase("white") ? 1 : -1;
+
         List<Figure> figuresDiag = new ArrayList<>(Patterns.selectUsingDiagonalPatternFromPosition(king.getX(), king.getY()));
         List<Figure> figuresHandV = new ArrayList<>(Patterns.selectUsingHorizontalAndVerticalPatternFromPosition(king.getX(), king.getY()));
         List<Figure> figuresKn = new ArrayList<>(Patterns.selectUsingKnightPatternFromPosition(king.getX(), king.getY()));
+        List<Figure> figuresPawn = Arrays.asList(board.getElementAt(king.getX() - 1, king.getY() + pawnDirection),
+                board.getElementAt(king.getX() + 1, king.getY() + pawnDirection));
 
-
-        int enemyFiguresDiag = 0;
-        int enemyFiguresHandV = 0;
-        int enemyFigureKn = 0;
-        if (figuresDiag.size() > 0)
-            enemyFiguresDiag = figuresDiag.stream().map(fig -> {
-                if (!(fig instanceof Bishop || fig instanceof  Queen))
-                    return 0;
-
-                if (!fig.getColor().equalsIgnoreCase(figureSource.getColor()))
-                    return 1;
-                return 0;
-            }).reduce(0, Integer::sum);
-
-        if (figuresHandV.size() > 0)
-            enemyFiguresHandV += figuresHandV.stream().map(fig -> {
-                if (!(fig instanceof Rook || fig instanceof  Queen))
-                    return 0;
-
-                if (!fig.getColor().equalsIgnoreCase(figureSource.getColor()))
-                    return 1;
-                return 0;
-            }).reduce(0, Integer::sum);
-
-        if (figuresKn.size() > 0)
-            enemyFigureKn += figuresKn.stream().map(fig -> {
-                if (!(fig instanceof Knight))
-                    return 0;
-
-                if (!fig.getColor().equalsIgnoreCase(figureSource.getColor()))
-                    return 1;
-                return 0;
-            }).reduce(0, Integer::sum);
+        int enemyFigures = 0;
+        enemyFigures += countFiguresByClass(figuresDiag,
+                Arrays.asList(new Class<?>[]{Bishop.class, Queen.class}), figureSource.getColor());
+        enemyFigures += countFiguresByClass(figuresHandV,
+                Arrays.asList(new Class<?>[]{Rook.class, Queen.class}), figureSource.getColor());
+        enemyFigures += countFiguresByClass(figuresKn,
+                Arrays.asList(new Class<?>[]{Knight.class}), figureSource.getColor());
+        enemyFigures += countFiguresByClass(figuresPawn,
+                Arrays.asList(new Class<?>[]{Pawn.class}), figureSource.getColor());
 
         board.setElementAt(xFrom, yFrom, figureSource);
         board.setElementAt(xTo, yTo, figureTarget);
 
-        return (enemyFiguresDiag + enemyFiguresHandV + enemyFigureKn) == 0;
-
-//        //Move the figure
-//        board.setElementAt(xFrom, yFrom, new Field());
-//        board.setElementAt(xTo, yTo, figureSource);
-//        board.markBoardAttacks();
-//
-//        //See if checked
-//        boolean kingChecked = board.kingChecked();
-//
-//        //Restore the position
-//        board.setElementAt(xFrom, yFrom, figureSource);
-//        board.setElementAt(xTo, yTo, figureTarget);
-//        board.markBoardAttacks();
-//
-//        return !kingChecked;
+        return enemyFigures == 0;
     }
 
+    @PureFunction
+    private int countFiguresByClass(List<Figure> list, List<Class<?>> figClasses, String color) {
+        return list.stream().map(fig -> {
+            if (!(figClasses.contains(fig.getClass())))
+                return 0;
+
+            if (!fig.getColor().equalsIgnoreCase(color))
+                return 1;
+            return 0;
+        }).reduce(0, Integer::sum);
+    }
 
     @PureFunction
     public boolean isPathClear(int xFrom, int yFrom, int xTo, int yTo) {

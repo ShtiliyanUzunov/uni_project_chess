@@ -67,6 +67,11 @@ public class Queen extends Figure {
     }
 
     @Override
+    public int getMaterialValue() {
+        return 9;
+    }
+
+    @Override
     public boolean isTargetLocationValid(int x, int y) {
         boolean checkX = x == this.getX();
         boolean checkY = y == this.getY();

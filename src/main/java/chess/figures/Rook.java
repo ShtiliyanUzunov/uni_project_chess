@@ -61,6 +61,11 @@ public class Rook extends Figure {
     }
 
     @Override
+    public int getMaterialValue() {
+        return 5;
+    }
+
+    @Override
     public boolean isTargetLocationValid(int x, int y) {
         boolean checkX = x == this.getX();
         boolean checkY = y == this.getY();

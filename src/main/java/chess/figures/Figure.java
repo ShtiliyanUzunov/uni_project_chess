@@ -32,6 +32,8 @@ public abstract class Figure implements Serializable {
 
     public abstract String getShortName();
 
+    public abstract int getMaterialValue();
+
     public void nullAttack() {
         isAttByWhite = false;
         isAttByBlack = false;

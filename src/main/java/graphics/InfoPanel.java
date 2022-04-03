@@ -38,6 +38,7 @@ public class InfoPanel extends JPanel {
         Board board = GlobalContext.getBoard();
         List<Move> moves = board.getAvailableMovesForPlayer();
         StringBuilder movesDescription = new StringBuilder();
+        int[] material = board.calculateMaterial();
 
         moves.forEach(movesDescription::append);
 
@@ -45,8 +46,9 @@ public class InfoPanel extends JPanel {
                 ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .<br/><br/>";
         String availableMoves = String.format("Available moves: %d<br/><br/>", moves.size());
         String playerTurn =String.format("Player turn: %s<br/><br/>", board.getPlayerTurn().toUpperCase());
+        String matOnBoard =String.format("Material: White:%d Black:%d<br/><br/>", material[0], material[1]);
 
-        String descriptionText = header + playerTurn + availableMoves + movesDescription;
+        String descriptionText = header + playerTurn + matOnBoard + availableMoves + movesDescription;
 
         description.setText(String.format("<html>%s</html>", descriptionText));
 

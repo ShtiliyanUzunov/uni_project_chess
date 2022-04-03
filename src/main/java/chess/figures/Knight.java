@@ -59,6 +59,11 @@ public class Knight extends Figure {
         return "Kn";
     }
 
+    @Override
+    public int getMaterialValue() {
+        return 3;
+    }
+
 
     @Override
     public boolean isTargetLocationValid(int x, int y) {

@@ -59,6 +59,11 @@ public class Bishop extends Figure {
     }
 
     @Override
+    public int getMaterialValue() {
+        return 3;
+    }
+
+    @Override
     public boolean isTargetLocationValid(int x, int y) {
         return Math.abs(x - this.getX()) == Math
                 .abs(y - this.getY());

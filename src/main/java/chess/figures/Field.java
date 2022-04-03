@@ -21,6 +21,11 @@ public class Field extends Figure {
     }
 
     @Override
+    public int getMaterialValue() {
+        return 0;
+    }
+
+    @Override
     public boolean isTargetLocationValid(int x, int y) {
         return false;
     }

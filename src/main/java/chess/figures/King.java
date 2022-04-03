@@ -68,6 +68,11 @@ public class King extends Figure {
     }
 
     @Override
+    public int getMaterialValue() {
+        return 0;
+    }
+
+    @Override
     public boolean isTargetLocationValid(int x, int y) {
         boolean moveX = (Math.abs(x - this.getX()) == 1) && (y == this.getY());
         boolean moveY = (Math.abs(y - this.getY()) == 1) && (x == this.getX());

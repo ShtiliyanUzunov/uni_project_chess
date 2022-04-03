@@ -64,6 +64,11 @@ public class Pawn extends Figure {
     }
 
     @Override
+    public int getMaterialValue() {
+        return 1;
+    }
+
+    @Override
     public boolean isTargetLocationValid(int x, int y) {
         if (!(board.getElementAt(x, y) instanceof Field) && (x == this.getX()))
             return false;
