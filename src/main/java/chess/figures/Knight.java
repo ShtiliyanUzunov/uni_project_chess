@@ -38,20 +38,12 @@ public class Knight extends Figure {
     @Override
     public void markAttacks() {
         selectUsingKnightPatternFromPosition(this.getX(), this.getY())
-            .forEach(fig -> board.attacked(fig.getX(), fig.getY(), this.getColor()));
+                .forEach(fig -> board.attacked(fig.getX(), fig.getY(), this.getColor()));
     }
 
     @Override
     public List<Move> getAvailableMoves() {
-        BoardMovement boardMovement = GlobalContext.getBoardMovement();
-
-        return Arrays.stream(knightMovePattern).filter((pattern) -> {
-            int xFrom = getX();
-            int yFrom = getY();
-            int xTo = xFrom + pattern[0];
-            int yTo = yFrom + pattern[1];
-            return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1], getShortName())).collect(Collectors.toList());
+        return getAvailableMovesFromPattern(knightMovePattern);
     }
 
     @Override

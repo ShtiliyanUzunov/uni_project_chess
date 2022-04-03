@@ -1,14 +1,21 @@
 package chess.figures;
 
 import chess.Board;
+import chess.BoardMovement;
+import chess.services.GlobalContext;
 import chess.util.Move;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
+
+import static chess.util.Patterns.horizontalAndVerticalPattern;
 
 @Getter
 @Setter
@@ -83,6 +90,19 @@ public abstract class Figure implements Serializable {
     public void setPosition(int x, int y) {
         position[0] = x;
         position[1] = y;
+    }
+
+    protected List<Move> getAvailableMovesFromPattern(int[][] pattern) {
+        BoardMovement boardMovement = GlobalContext.getBoardMovement();
+
+        return Arrays.stream(pattern).filter((p) -> {
+            int xFrom = getX();
+            int yFrom = getY();
+            int xTo = xFrom + p[0];
+            int yTo = yFrom + p[1];
+            return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
+        }).map(p -> new Move(getX(), getY(), getX() + p[0], getY() + p[1], getShortName())).collect(Collectors.toList());
+
     }
 
 }

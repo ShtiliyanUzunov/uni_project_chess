@@ -42,15 +42,7 @@ public class Bishop extends Figure {
 
     @Override
     public List<Move> getAvailableMoves() {
-        BoardMovement boardMovement = GlobalContext.getBoardMovement();
-
-        return Arrays.stream(diagonalPattern).filter((pattern) -> {
-            int xFrom = getX();
-            int yFrom = getY();
-            int xTo = xFrom + pattern[0];
-            int yTo = yFrom + pattern[1];
-            return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1], this.getShortName())).collect(Collectors.toList());
+        return getAvailableMovesFromPattern(diagonalPattern);
     }
 
     @Override
