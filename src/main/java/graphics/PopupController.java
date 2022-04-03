@@ -12,6 +12,16 @@ public class PopupController {
             JOptionPane.showMessageDialog(null, "Check!");
             return null;
         });
+
+        EventBus.getEventBus().register(ChannelNames.UI_CHECKMATE, (Object param) -> {
+            JOptionPane.showMessageDialog(null, "Checkmate!!!");
+            return null;
+        });
+
+        EventBus.getEventBus().register(ChannelNames.UI_STALEMATE, (Object param) -> {
+            JOptionPane.showMessageDialog(null, "Stalemate!");
+            return null;
+        });
     }
 
 }

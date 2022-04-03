@@ -45,13 +45,13 @@ public class King extends Figure {
     }
 
     @Override
-    public List<Move> getValidMoves() {
+    public List<Move> getAvailableMoves() {
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
 
         //Add casteling moves to pattern.
         List<int[]> moves = Arrays.stream(kingMovePattern).collect(Collectors.toList());
-        moves.add(new int[] {2, 0});
-        moves.add(new int[] {-2, 0});
+        moves.add(new int[]{2, 0});
+        moves.add(new int[]{-2, 0});
 
         return moves.stream().filter((pattern) -> {
             int xFrom = getX();
@@ -59,7 +59,12 @@ public class King extends Figure {
             int xTo = xFrom + pattern[0];
             int yTo = yFrom + pattern[1];
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1])).collect(Collectors.toList());
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1], getShortName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getShortName() {
+        return "Kg";
     }
 
     @Override

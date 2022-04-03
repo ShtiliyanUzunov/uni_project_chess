@@ -1,0 +1,2 @@
+#1 - Bug with nPassant discovered check.
+#2 - Performance issues in method isNotCheckedAfterMove - 2 times setBoard attacks is called

@@ -1,7 +1,6 @@
 package chess.figures;
 
 import java.lang.Math;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +14,6 @@ import chess.util.Move;
 import chess.util.Patterns;
 
 import static chess.util.Patterns.diagonalPattern;
-import static chess.util.Patterns.knightMovePattern;
 
 public class Bishop extends Figure {
 
@@ -38,11 +36,12 @@ public class Bishop extends Figure {
 
     @Override
     public void markAttacks() {
-        Patterns.applyDiagonalPatternFromPosition(this.getX(), this.getY(), this.getColor());
+        Patterns.selectUsingDiagonalPatternFromPosition(this.getX(), this.getY())
+                .forEach(fig -> board.attacked(fig.getX(), fig.getY(), this.getColor()));
     }
 
     @Override
-    public List<Move> getValidMoves() {
+    public List<Move> getAvailableMoves() {
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
 
         return Arrays.stream(diagonalPattern).filter((pattern) -> {
@@ -51,7 +50,12 @@ public class Bishop extends Figure {
             int xTo = xFrom + pattern[0];
             int yTo = yFrom + pattern[1];
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1])).collect(Collectors.toList());
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1], this.getShortName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getShortName() {
+        return "B";
     }
 
     @Override

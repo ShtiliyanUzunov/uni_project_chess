@@ -4,6 +4,7 @@ import chess.figures.*;
 import chess.services.CollisionChecker;
 import chess.services.GlobalContext;
 import chess.util.NotPureFunction;
+import chess.util.Patterns;
 import chess.util.PureFunction;
 import communication.ChannelNames;
 import communication.EventBus;
@@ -27,6 +28,7 @@ public class BoardMovement {
     // Main Move Function
     @NotPureFunction
     public void moveFigure(int xFrom, int yFrom, int xTo, int yTo) {
+        long start = System.currentTimeMillis();
         Board board = GlobalContext.getBoard();
 
         clearMoveCallbacks();
@@ -46,12 +48,9 @@ public class BoardMovement {
         board.setElementAt(xFrom, yFrom, new Field());
         eightRank(xTo, yTo);
 
-        board.markBoardAttacks();
-
-        if (kingChecked()) {
-            EventBus.getEventBus().post(ChannelNames.UI_CHECK, null);
-        }
-
+        eventBus.post(ChannelNames.MOVE_FINISHED, null);
+        long end = System.currentTimeMillis();
+        System.out.println(String.format("Move exec time: %d", end - start));
     }
 
     @NotPureFunction
@@ -88,7 +87,7 @@ public class BoardMovement {
     }
 
     @PureFunction
-    private boolean validCoordinates(int xFrom, int yFrom, int xTo, int yTo) {
+    public boolean validCoordinates(int xFrom, int yFrom, int xTo, int yTo) {
         return indexInBoardRange(xFrom) && indexInBoardRange(yFrom) && indexInBoardRange(xTo)
                 && indexInBoardRange(yTo);
     }
@@ -105,34 +104,80 @@ public class BoardMovement {
         Figure figureSource = board.getElementAt(xFrom, yFrom);
         Figure figureTarget = board.getElementAt(xTo, yTo);
 
-        //Move the figure
+        if (figureSource instanceof King) {
+            return !figureTarget.isAttByOpponent(figureSource.getColor());
+        }
+
         board.setElementAt(xFrom, yFrom, new Field());
         board.setElementAt(xTo, yTo, figureSource);
-        board.markBoardAttacks();
 
-        //See if checked
-        boolean kingChecked = kingChecked();
+        Figure king = board.getKingInTurn();
+        List<Figure> figuresDiag = new ArrayList<>(Patterns.selectUsingDiagonalPatternFromPosition(king.getX(), king.getY()));
+        List<Figure> figuresHandV = new ArrayList<>(Patterns.selectUsingHorizontalAndVerticalPatternFromPosition(king.getX(), king.getY()));
+        List<Figure> figuresKn = new ArrayList<>(Patterns.selectUsingKnightPatternFromPosition(king.getX(), king.getY()));
 
-        //Restore the position
+
+        int enemyFiguresDiag = 0;
+        int enemyFiguresHandV = 0;
+        int enemyFigureKn = 0;
+        if (figuresDiag.size() > 0)
+            enemyFiguresDiag = figuresDiag.stream().map(fig -> {
+                if (!(fig instanceof Bishop || fig instanceof  Queen))
+                    return 0;
+
+                if (!fig.getColor().equalsIgnoreCase(figureSource.getColor()))
+                    return 1;
+                return 0;
+            }).reduce(0, Integer::sum);
+
+        if (figuresHandV.size() > 0)
+            enemyFiguresHandV += figuresHandV.stream().map(fig -> {
+                if (!(fig instanceof Rook || fig instanceof  Queen))
+                    return 0;
+
+                if (!fig.getColor().equalsIgnoreCase(figureSource.getColor()))
+                    return 1;
+                return 0;
+            }).reduce(0, Integer::sum);
+
+        if (figuresKn.size() > 0)
+            enemyFigureKn += figuresKn.stream().map(fig -> {
+                if (!(fig instanceof Knight))
+                    return 0;
+
+                if (!fig.getColor().equalsIgnoreCase(figureSource.getColor()))
+                    return 1;
+                return 0;
+            }).reduce(0, Integer::sum);
+
         board.setElementAt(xFrom, yFrom, figureSource);
         board.setElementAt(xTo, yTo, figureTarget);
-        board.markBoardAttacks();
 
-        return !kingChecked;
+        return (enemyFiguresDiag + enemyFiguresHandV + enemyFigureKn) == 0;
+
+//        //Move the figure
+//        board.setElementAt(xFrom, yFrom, new Field());
+//        board.setElementAt(xTo, yTo, figureSource);
+//        board.markBoardAttacks();
+//
+//        //See if checked
+//        boolean kingChecked = board.kingChecked();
+//
+//        //Restore the position
+//        board.setElementAt(xFrom, yFrom, figureSource);
+//        board.setElementAt(xTo, yTo, figureTarget);
+//        board.markBoardAttacks();
+//
+//        return !kingChecked;
     }
 
-    @PureFunction
-    private boolean kingChecked() {
-        Board board = GlobalContext.getBoard();
-
-        Figure king = board.getPlayerTurn().equalsIgnoreCase("white") ?
-                board.getWhiteKing() : board.getBlackKing();
-
-        return king.isAttByOpponent();
-    }
 
     @PureFunction
     public boolean isPathClear(int xFrom, int yFrom, int xTo, int yTo) {
+        if (!validCoordinates(xFrom, yFrom, xTo, yTo)) {
+            return false;
+        }
+
         return collisionChecker.isPathClear(xFrom, yFrom, xTo, yTo);
     }
 
@@ -291,7 +336,7 @@ public class BoardMovement {
             return false;
 
         int pawnMoveVector = board.getPlayerTurn().equalsIgnoreCase("White") ? 1 : -1;
-        int rankRequired =  board.getPlayerTurn().equalsIgnoreCase("White") ? 4 : 3;
+        int rankRequired = board.getPlayerTurn().equalsIgnoreCase("White") ? 4 : 3;
         boolean currentMoveCondition = (yTo - yFrom) * pawnMoveVector == 1 && (Math.abs(xFrom - xTo) == 1)
                 && yFrom == rankRequired;
         boolean lastMoveCondition = (board.getElementAt(lastMove[2], lastMove[3]) instanceof Pawn)

@@ -1,7 +1,6 @@
 package chess.figures;
 
 import java.lang.Math;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +12,7 @@ import chess.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
 
+import static chess.util.Patterns.selectUsingKnightPatternFromPosition;
 import static chess.util.Patterns.knightMovePattern;
 
 public class Knight extends Figure {
@@ -37,13 +37,12 @@ public class Knight extends Figure {
 
     @Override
     public void markAttacks() {
-		Arrays.stream(knightMovePattern).forEach((pattern) -> {
-			board.attacked(this.getX() + pattern[0], this.getY() + pattern[1], this.getColor());
-		});
+        selectUsingKnightPatternFromPosition(this.getX(), this.getY())
+            .forEach(fig -> board.attacked(fig.getX(), fig.getY(), this.getColor()));
     }
 
     @Override
-    public List<Move> getValidMoves() {
+    public List<Move> getAvailableMoves() {
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
 
         return Arrays.stream(knightMovePattern).filter((pattern) -> {
@@ -52,7 +51,12 @@ public class Knight extends Figure {
             int xTo = xFrom + pattern[0];
             int yTo = yFrom + pattern[1];
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1])).collect(Collectors.toList());
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1], getShortName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getShortName() {
+        return "Kn";
     }
 
 

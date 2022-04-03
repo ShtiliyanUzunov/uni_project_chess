@@ -1,8 +1,15 @@
 package chess;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import chess.figures.*;
+import chess.services.GlobalContext;
+import chess.util.Move;
+import chess.util.PureFunction;
+import communication.ChannelNames;
+import communication.EventBus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +29,61 @@ public class Board implements Serializable {
 	@Getter
 	@Setter
 	private String playerTurn;
+
+	@Getter
+	private List<Move> availableMovesForPlayer;
+
+	public Board() {
+		EventBus.getEventBus().register(ChannelNames.MOVE_FINISHED, this::onMoveFinished);
+	}
+
+	private Void onMoveFinished(Object obj) {
+		this.markBoardAttacks();
+		availableMovesForPlayer = new ArrayList<>();
+
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++)
+				availableMovesForPlayer.addAll(chessBoard[i][j].getAvailableMoves());
+		long end = System.currentTimeMillis();
+		System.out.println("Available moves calc: " + (end - start));
+
+		if (checkMate()) {
+			EventBus.getEventBus().post(ChannelNames.UI_CHECKMATE, null);
+		}
+
+		if (kingChecked() && !checkMate()) {
+			EventBus.getEventBus().post(ChannelNames.UI_CHECK, null);
+		}
+
+		if (stalemate()) {
+			EventBus.getEventBus().post(ChannelNames.UI_STALEMATE, null);
+		}
+
+		EventBus.getEventBus().post(ChannelNames.UI_INFO_UPDATE, null);
+		return null;
+	}
+
+	@PureFunction
+	public boolean kingChecked() {
+		Figure king = getKingInTurn();
+
+		return king.isAttByOpponent();
+	}
+
+	@PureFunction
+	public Figure getKingInTurn() {
+		return getPlayerTurn().equalsIgnoreCase("white") ?
+				getWhiteKing() : getBlackKing();
+	}
+
+	private boolean checkMate() {
+		return kingChecked() && availableMovesForPlayer.size() == 0;
+	}
+
+	private boolean stalemate() {
+		return !kingChecked() && availableMovesForPlayer.size() == 0;
+	}
 
 	// Main Initializing Function
 	public void initializeBoard() {
@@ -86,7 +148,8 @@ public class Board implements Serializable {
 				chessBoard[x][y] = new Field();
 			}
 		}
-		markBoardAttacks();
+
+		onMoveFinished(null);
 	}
 
 	private void nullBoardAttack() {

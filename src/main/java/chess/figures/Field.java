@@ -11,8 +11,13 @@ public class Field extends Figure {
     public void markAttacks() { }
 
     @Override
-    public List<Move> getValidMoves() {
+    public List<Move> getAvailableMoves() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public String getShortName() {
+        return null;
     }
 
     @Override

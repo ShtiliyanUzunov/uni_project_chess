@@ -100,7 +100,7 @@ public class ChessPanel extends JPanel {
             g.drawImage(select, xFrom * 75, 525 - yFrom * 75, null);
 
             if (parent.getShowAvailableMoves().getState()) {
-                List<Move> availableMoves = board.getElementAt(xFrom, yFrom).getValidMoves();
+                List<Move> availableMoves = board.getElementAt(xFrom, yFrom).getAvailableMoves();
                 availableMoves.forEach(move -> {
                     int[] targetPosition = move.getTargetPosition();
                     int x = targetPosition[0];

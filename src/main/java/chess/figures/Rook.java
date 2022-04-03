@@ -7,12 +7,10 @@ import chess.services.GlobalContext;
 import chess.util.Move;
 import chess.util.Patterns;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static chess.util.Patterns.diagonalPattern;
 import static chess.util.Patterns.horizontalAndVerticalPattern;
 
 
@@ -39,21 +37,27 @@ public class Rook extends Figure {
 
     @Override
     public void markAttacks() {
-        Patterns.applyHorizontalAndVerticalPatternFromPosition(this.getX(), this.getY(), this.getColor());
+        Patterns.selectUsingHorizontalAndVerticalPatternFromPosition(this.getX(), this.getY())
+                .forEach(fig -> board.attacked(fig.getX(), fig.getY(), this.getColor()));
     }
 
     @Override
-    public List<Move> getValidMoves() {
+    public List<Move> getAvailableMoves() {
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
 
         return Arrays.stream(horizontalAndVerticalPattern).filter((pattern) -> {
             int xFrom = getX();
             int yFrom = getY();
-            int xTo = (xFrom + pattern[0]) % 8;
-            int yTo = (yFrom + pattern[1]) % 8;
+            int xTo = xFrom + pattern[0];
+            int yTo = yFrom + pattern[1];
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), (getX() + pattern[0]) % 8, (getY() + pattern[1]) % 8)).collect(Collectors.toList());
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + pattern[1], getShortName())).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public String getShortName() {
+        return "R";
     }
 
     @Override

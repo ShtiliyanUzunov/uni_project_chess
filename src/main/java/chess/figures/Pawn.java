@@ -7,12 +7,10 @@ import chess.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static chess.util.Patterns.knightMovePattern;
 
 public class Pawn extends Figure {
 
@@ -36,19 +34,15 @@ public class Pawn extends Figure {
 
     @Override
     public void markAttacks() {
-        if (this.color.equalsIgnoreCase("White")) {
-            board.attacked(this.getX() + 1, this.getY() + 1, "White");
-            board.attacked(this.getX() - 1, this.getY() + 1, "White");
-        } else {
-            board.attacked(this.getX() + 1, this.getY() - 1, "Black");
-            board.attacked(this.getX() - 1, this.getY() - 1, "Black");
-        }
+        int direction = this.color.equalsIgnoreCase("White") ? 1 : -1;
+        board.attacked(this.getX() + 1, this.getY() + direction, this.getColor());
+        board.attacked(this.getX() - 1, this.getY() + direction, this.getColor());
     }
 
     @Override
-    public List<Move> getValidMoves() {
+    public List<Move> getAvailableMoves() {
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
-        int moveVector = color.equalsIgnoreCase("white") ? 1: -1;
+        int moveVector = color.equalsIgnoreCase("white") ? 1 : -1;
 
         int[][] pawnPattern = {
                 {0, 1}, {0, 2}, {-1, 1}, {1, 1}
@@ -60,8 +54,13 @@ public class Pawn extends Figure {
             int xTo = xFrom + pattern[0];
             int yTo = yFrom + (moveVector * pattern[1]);
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + moveVector * pattern[1])).collect(Collectors.toList());
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + moveVector * pattern[1], getShortName())).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public String getShortName() {
+        return "P";
     }
 
     @Override
