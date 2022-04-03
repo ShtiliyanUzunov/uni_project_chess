@@ -34,8 +34,10 @@ public class Board implements Serializable {
     @Getter
     private List<Move> availableMovesForPlayer;
 
+    private static final EventBus eventBus = EventBus.getEventBus();
+
     public Board() {
-        EventBus.getEventBus().register(ChannelNames.MOVE_FINISHED, this::onMoveFinished);
+        eventBus.register(ChannelNames.MOVE_FINISHED, this::onMoveFinished);
     }
 
     private Void onMoveFinished(Object obj) {
@@ -150,7 +152,7 @@ public class Board implements Serializable {
             }
         }
 
-        onMoveFinished(null);
+        eventBus.post(ChannelNames.MOVE_FINISHED, null);
     }
 
     private void nullBoardAttack() {

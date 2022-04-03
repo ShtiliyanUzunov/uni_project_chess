@@ -30,10 +30,6 @@ public class GameServices {
             return null;
         });
 
-        eventBus.register(ChannelNames.NEW_MOVE, (Object param) -> {
-            history.saveBoardState();
-            return null;
-        });
     }
 
     private void newGame() {

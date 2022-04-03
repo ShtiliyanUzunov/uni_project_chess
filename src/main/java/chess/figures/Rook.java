@@ -2,14 +2,10 @@ package chess.figures;
 
 import javax.swing.ImageIcon;
 import chess.Board;
-import chess.BoardMovement;
-import chess.services.GlobalContext;
 import chess.util.Move;
 import chess.util.Patterns;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static chess.util.Patterns.horizontalAndVerticalPattern;
 

@@ -1,11 +1,10 @@
 package chess.util;
 
 import chess.Board;
-import chess.BoardMovement;
+import chess.services.BoardMovement;
 import chess.figures.Figure;
 import chess.services.GlobalContext;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,4 +68,17 @@ public class Patterns {
                 .map((position) -> board.getElementAt(x + position[0], y + position[1])).collect(Collectors.toList());
     }
 
+    public static List<Figure> selectUsingPawnAttackPatternFromPosition(int x, int y) {
+        Board board = GlobalContext.getBoard();
+        BoardMovement movement = GlobalContext.getBoardMovement();
+        Figure figure = board.getElementAt(x, y);
+
+        int pawnDirection = figure.getColor().equalsIgnoreCase("white") ? 1 : -1;
+        int[][] pattern = new int[][]{{1, pawnDirection}, {-1, pawnDirection}};
+
+        return Arrays.stream(pattern).filter(position -> movement.validCoordinates(x, y, x + position[0], y + position[1]))
+                .map((position) -> board.getElementAt(x + position[0], y + position[1])).collect(Collectors.toList());
+
+
+    }
 }

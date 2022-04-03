@@ -35,13 +35,11 @@ public class ChessFrame extends JFrame {
         initializeFileChooser();
         createMenuBar();
 
-
         BorderLayout l = new BorderLayout();
         setLayout(l);
 
         add(chessPanel = new ChessPanel(this));
         add(infoPanel = new InfoPanel(this),BorderLayout.EAST);
-
 
         setTitle("Chess Game");
         setVisible(true);
@@ -72,7 +70,6 @@ public class ChessFrame extends JFrame {
         });
 
     }
-
 
     private void createMenuBar() {
         JMenuBar menu = new JMenuBar();

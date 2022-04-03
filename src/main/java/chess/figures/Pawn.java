@@ -3,7 +3,7 @@ package chess.figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
-import chess.BoardMovement;
+import chess.services.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
 

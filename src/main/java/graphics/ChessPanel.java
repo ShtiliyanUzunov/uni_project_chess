@@ -2,8 +2,11 @@ package graphics;
 
 import chess.figures.Field;
 import chess.*;
+import chess.services.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
+import communication.ChannelNames;
+import communication.EventBus;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -110,7 +113,6 @@ public class ChessPanel extends JPanel {
 
             }
         }
-
     }
 
 }

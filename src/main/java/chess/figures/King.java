@@ -1,20 +1,15 @@
 package chess.figures;
 
 import java.lang.Math;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
 import chess.Board;
-import chess.BoardMovement;
-import chess.services.GlobalContext;
 import chess.util.Move;
 
-import static chess.util.Patterns.diagonalPattern;
 import static chess.util.Patterns.kingMovePattern;
 
 public class King extends Figure {

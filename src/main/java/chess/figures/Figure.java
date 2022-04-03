@@ -1,7 +1,7 @@
 package chess.figures;
 
 import chess.Board;
-import chess.BoardMovement;
+import chess.services.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
 import lombok.Getter;
@@ -9,13 +9,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
-
-import static chess.util.Patterns.horizontalAndVerticalPattern;
 
 @Getter
 @Setter

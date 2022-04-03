@@ -9,7 +9,6 @@ public class ChannelNames {
     public static final String UI_STALEMATE = "ui:stalemate!";
     public static final String UI_CHECKMATE = "ui:checkmate!";
     public static final String UI_INFO_UPDATE = "ui:infoUpdate";
-    public static final String NEW_MOVE = "newMove";
     public static final String MOVE_FINISHED = "moveFinished";
 
 }

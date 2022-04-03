@@ -1,5 +1,6 @@
-package chess;
+package chess.services;
 
+import chess.Board;
 import chess.figures.*;
 import chess.services.CollisionChecker;
 import chess.services.GlobalContext;
@@ -104,22 +105,15 @@ public class BoardMovement {
         Figure figureSource = board.getElementAt(xFrom, yFrom);
         Figure figureTarget = board.getElementAt(xTo, yTo);
 
-        if (figureSource instanceof King) {
-            return !figureTarget.isAttByOpponent(figureSource.getColor());
-        }
-
         board.setElementAt(xFrom, yFrom, new Field());
         board.setElementAt(xTo, yTo, figureSource);
 
         Figure king = board.getKingInTurn();
 
-        int pawnDirection = king.getColor().equalsIgnoreCase("white") ? 1 : -1;
-
         List<Figure> figuresDiag = new ArrayList<>(Patterns.selectUsingDiagonalPatternFromPosition(king.getX(), king.getY()));
         List<Figure> figuresHandV = new ArrayList<>(Patterns.selectUsingHorizontalAndVerticalPatternFromPosition(king.getX(), king.getY()));
         List<Figure> figuresKn = new ArrayList<>(Patterns.selectUsingKnightPatternFromPosition(king.getX(), king.getY()));
-        List<Figure> figuresPawn = Arrays.asList(board.getElementAt(king.getX() - 1, king.getY() + pawnDirection),
-                board.getElementAt(king.getX() + 1, king.getY() + pawnDirection));
+        List<Figure> figuresPawn = new ArrayList<>(Patterns.selectUsingPawnAttackPatternFromPosition(king.getX(), king.getY()));
 
         int enemyFigures = 0;
         enemyFigures += countFiguresByClass(figuresDiag,

@@ -1,7 +1,6 @@
 package chess.services;
 
 import chess.Board;
-import chess.BoardMovement;
 
 public class GlobalContext {
 
