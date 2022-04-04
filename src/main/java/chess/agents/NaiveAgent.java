@@ -77,7 +77,7 @@ public class NaiveAgent {
         Random rand = new Random();
         Move move = moves.get(rand.nextInt(moves.size()));
 
-        int[] from = move.getCurrentPosition();
+        int[] from = move.getSourcePosition();
         int[] to = move.getTargetPosition();
         boardMovement.moveFigure(from[0], from[1], to[0], to[1]);
     }

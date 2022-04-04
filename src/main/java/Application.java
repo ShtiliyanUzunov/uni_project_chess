@@ -9,7 +9,7 @@ public class Application {
                 .gameInterface(GameInterface.GUI)
                 .whiteAgent(Agent.BOT)
                 .blackAgent(Agent.BOT)
-                .moveDelay(10)
+                .moveDelay(500)
                 .build();
         game.start();
     }

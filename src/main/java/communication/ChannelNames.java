@@ -12,6 +12,9 @@ public class ChannelNames {
     public static final String MOVE_FINISHED = "moveFinished";
     public static final String PAUSE_AGENTS = "pauseAgents";
     public static final String RESUME_AGENTS = "resumeAgents";
+    public static final String HISTORY_MOVE_TO_START = "history:moveToStart";
+    public static final String HISTORY_FORWARD = "history:forward";
+    public static final String HISTORY_BACKWARD = "history:backward";
 
 }
 

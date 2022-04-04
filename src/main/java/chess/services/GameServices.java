@@ -10,8 +10,6 @@ public class GameServices {
 
     private EventBus eventBus = EventBus.getEventBus();
 
-    private History history = new History();
-
     public GameServices() {
         eventBus.register(ChannelNames.UI_NEW_GAME, (Object param) -> {
             this.newGame();

@@ -42,13 +42,15 @@ public class InfoPanel extends JPanel {
 
         moves.forEach(movesDescription::append);
 
+        String moveHistory = board.getHistory().getHistoryInfo();
+
         String header = "INFO Panel" +
                 ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .<br/><br/>";
         String availableMoves = String.format("Available moves: %d<br/><br/>", moves.size());
         String playerTurn =String.format("Player turn: %s<br/><br/>", board.getPlayerTurn().toUpperCase());
         String matOnBoard =String.format("Material: White:%d Black:%d<br/><br/>", material[0], material[1]);
 
-        String descriptionText = header + playerTurn + matOnBoard + availableMoves + movesDescription;
+        String descriptionText = header + playerTurn + matOnBoard + moveHistory + availableMoves + movesDescription;
 
         description.setText(String.format("<html>%s</html>", descriptionText));
 

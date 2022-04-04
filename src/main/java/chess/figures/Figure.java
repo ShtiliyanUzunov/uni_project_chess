@@ -4,6 +4,7 @@ import chess.Board;
 import chess.services.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
+import chess.util.PureFunction;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +25,7 @@ public abstract class Figure implements Serializable {
     protected String color;
     protected int[] position = new int[2];
     protected boolean moved;
-    protected Board board;
+    protected transient Board board;
 
     //Main Move Checker
     public abstract boolean isTargetLocationValid(int x, int y);
@@ -60,7 +61,7 @@ public abstract class Figure implements Serializable {
     }
 
     public boolean isBlack() {
-        return !isWhite();
+        return color.equalsIgnoreCase("black");
     }
 
     /**
@@ -77,8 +78,16 @@ public abstract class Figure implements Serializable {
         return playerColor.equalsIgnoreCase("black") && isAttByWhite;
     }
 
-    public void setAttackedBy(String Color) {
+    @PureFunction
+    public String oppositeColor() {
         if (isWhite())
+            return "Black";
+        else
+            return "White";
+    }
+
+    public void setAttackedBy(String Color) {
+        if (Color.equalsIgnoreCase("white"))
             isAttByWhite = true;
         else
             isAttByBlack = true;
@@ -106,7 +115,7 @@ public abstract class Figure implements Serializable {
             int xTo = xFrom + p[0];
             int yTo = yFrom + p[1];
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(p -> new Move(getX(), getY(), getX() + p[0], getY() + p[1], getShortName())).collect(Collectors.toList());
+        }).map(p -> new Move(getX(), getY(), getX() + p[0], getY() + p[1], false)).collect(Collectors.toList());
 
     }
 

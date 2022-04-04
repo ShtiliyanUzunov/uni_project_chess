@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import chess.figures.*;
+import chess.services.History;
 import chess.util.Move;
 import chess.util.PureFunction;
 import communication.ChannelNames;
@@ -33,10 +34,16 @@ public class Board implements Serializable {
     @Getter
     private List<Move> availableMovesForPlayer;
 
+    @Getter
+    private History history = new History();
+
     private static final EventBus eventBus = EventBus.getEventBus();
 
     public Board() {
         eventBus.register(ChannelNames.MOVE_FINISHED, this::onMoveFinished);
+        eventBus.register(ChannelNames.HISTORY_BACKWARD, history::backwards);
+        eventBus.register(ChannelNames.HISTORY_FORWARD, history::forward);
+        eventBus.register(ChannelNames.HISTORY_MOVE_TO_START, history::moveToStart);
     }
 
     private Void onMoveFinished(Object obj) {
@@ -116,6 +123,7 @@ public class Board implements Serializable {
     public void initializeBoard() {
         lastMove = new int[4];
         playerTurn = "White";
+        history.clear();
 
         /*
          * White pieces

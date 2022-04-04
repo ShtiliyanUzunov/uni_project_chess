@@ -2,6 +2,7 @@ package chess.services;
 
 import chess.Board;
 import chess.figures.*;
+import chess.util.Move;
 import chess.util.NotPureFunction;
 import chess.util.Patterns;
 import chess.util.PureFunction;
@@ -10,7 +11,6 @@ import communication.EventBus;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +39,9 @@ public class BoardMovement {
 
         applyMoveCallbacks();
 
-        board.setPlayerTurn(oppositeColor(xFrom, yFrom));
+        board.getHistory().saveMove(new Move(xFrom, yFrom, xTo, yTo, true));
+
+        board.setPlayerTurn(figure.oppositeColor());
         board.setLastMove(new int[]{xFrom, yFrom, xTo, yTo});
 
         figure.setMoved(true);
@@ -159,14 +161,7 @@ public class BoardMovement {
         return board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase(board.getPlayerTurn());
     }
 
-    @PureFunction
-    private String oppositeColor(int xFrom, int yFrom) {
-        Board board = GlobalContext.getBoard();
-        if (board.getElementAt(xFrom, yFrom).isWhite())
-            return "Black";
-        else
-            return "White";
-    }
+
 
     @PureFunction
     private boolean isTargetFigureFriendly(int xFrom, int yFrom, int xTo, int yTo) {
@@ -257,41 +252,9 @@ public class BoardMovement {
         }
         if ((figure.isWhite() && y2 == 7)
                 || (figure.isBlack() && y2 == 0)) {
-
-            String[] choice = new String[4];
-            choice[0] = "Queen";
-            choice[1] = "Rook";
-            choice[2] = "Knight";
-            choice[3] = "Bishop";
-
-            int a = JOptionPane.showOptionDialog(null, "Chess",
-                    "Choose a Figure", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, choice, null);
-
             String color = figure.getColor();
-            switch (a) {
-                case -1:
-                    eightRank(x2, y2);
-                    break;
-                case 0: {
-                    board.setElementAt(x2, y2, new Queen(color, x2, y2, board));
-                    break;
-                }
-                case 1: {
-                    board.setElementAt(x2, y2, new Rook(color, x2, y2, board));
-                    break;
-                }
-                case 2: {
-                    board.setElementAt(x2, y2, new Knight(color, x2, y2, board));
-                    break;
-                }
-                case 3: {
-                    board.setElementAt(x2, y2, new Bishop(color, x2, y2, board));
-                    break;
-                }
-            }
+            board.setElementAt(x2, y2, new Queen(color, x2, y2, board));
         }
-
     }
 
     @PureFunction

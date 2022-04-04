@@ -28,6 +28,8 @@ public class Game {
         configureAgent();
         configureNotifications();
         startInterface();
+
+        GlobalContext.getConfiguration().setEnableHistory(true);
     }
 
     private void configureNotifications() {
