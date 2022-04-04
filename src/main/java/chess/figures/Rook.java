@@ -19,16 +19,15 @@ public class Rook extends Figure {
 
     public Rook(String Col, int x, int y, Board b) {
         moved = false;
-
-        if (Col.equalsIgnoreCase("white"))
-            this.icon = iconWhite;
-        else
-            this.icon = iconBlack;
-
         super.color = Col;
         super.position[0] = x;
         super.position[1] = y;
         super.board = b;
+
+        if (isWhite())
+            this.icon = iconWhite;
+        else
+            this.icon = iconBlack;
     }
 
     @Override

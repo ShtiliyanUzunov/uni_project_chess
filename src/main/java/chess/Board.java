@@ -79,15 +79,20 @@ public class Board implements Serializable {
     }
 
     @PureFunction
+    public boolean isWhiteTurn() {
+        return playerTurn.equalsIgnoreCase("white");
+    }
+
+    @PureFunction
     public boolean insufficientMaterial() {
         //TODO: Add additional rules for insufficient material. E.g. - 1 knight/1 Bishop each side
         int whiteMaterial = Arrays.stream(chessBoard).flatMap(x -> Arrays.stream(x).filter(
-                fig -> !(fig instanceof Field) && fig.getColor().equalsIgnoreCase("white")))
+                fig -> !(fig instanceof Field) && fig.isWhite()))
                 .map(Figure::getMaterialValue)
                 .reduce(0, Integer::sum);
 
         int blackMaterial = Arrays.stream(chessBoard).flatMap(x -> Arrays.stream(x).filter(
-                fig -> !(fig instanceof Field) && fig.getColor().equalsIgnoreCase("black")))
+                fig -> !(fig instanceof Field) && fig.isBlack()))
                 .map(Figure::getMaterialValue)
                 .reduce(0, Integer::sum);
 
@@ -96,8 +101,7 @@ public class Board implements Serializable {
 
     @PureFunction
     public Figure getKingInTurn() {
-        return getPlayerTurn().equalsIgnoreCase("white") ?
-                getWhiteKing() : getBlackKing();
+        return isWhiteTurn() ? getWhiteKing() : getBlackKing();
     }
 
     private boolean checkMate() {
@@ -219,7 +223,7 @@ public class Board implements Serializable {
                 if (f instanceof Field)
                     continue;
 
-                if (f.getColor().equalsIgnoreCase("white")) {
+                if (f.isWhite()) {
                     matWhite += f.getMaterialValue();
                 } else {
                     matBlack += f.getMaterialValue();

@@ -49,10 +49,18 @@ public abstract class Figure implements Serializable {
                     "Use this method only if you are 100% sure that you are referencing a figure.");
         }
 
-        if (color.equalsIgnoreCase("white") && isAttByBlack)
+        if (isWhite() && isAttByBlack)
             return true;
 
-        return color.equalsIgnoreCase("black") && isAttByWhite;
+        return isBlack() && isAttByWhite;
+    }
+
+    public boolean isWhite() {
+        return color.equalsIgnoreCase("white");
+    }
+
+    public boolean isBlack() {
+        return !isWhite();
     }
 
     /**
@@ -70,7 +78,7 @@ public abstract class Figure implements Serializable {
     }
 
     public void setAttackedBy(String Color) {
-        if (Color.equalsIgnoreCase("white"))
+        if (isWhite())
             isAttByWhite = true;
         else
             isAttByBlack = true;

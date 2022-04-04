@@ -2,8 +2,6 @@ package chess.services;
 
 import chess.Board;
 import chess.figures.*;
-import chess.services.CollisionChecker;
-import chess.services.GlobalContext;
 import chess.util.NotPureFunction;
 import chess.util.Patterns;
 import chess.util.PureFunction;
@@ -41,7 +39,7 @@ public class BoardMovement {
 
         applyMoveCallbacks();
 
-        board.setPlayerTurn(opositeColor(xFrom, yFrom));
+        board.setPlayerTurn(oppositeColor(xFrom, yFrom));
         board.setLastMove(new int[]{xFrom, yFrom, xTo, yTo});
 
         figure.setMoved(true);
@@ -162,9 +160,9 @@ public class BoardMovement {
     }
 
     @PureFunction
-    private String opositeColor(int xFrom, int yFrom) {
+    private String oppositeColor(int xFrom, int yFrom) {
         Board board = GlobalContext.getBoard();
-        if (board.getElementAt(xFrom, yFrom).getColor().equalsIgnoreCase("White"))
+        if (board.getElementAt(xFrom, yFrom).isWhite())
             return "Black";
         else
             return "White";
@@ -252,11 +250,13 @@ public class BoardMovement {
     private void eightRank(int x2, int y2) {
         Board board = GlobalContext.getBoard();
 
-        if (!(board.getElementAt(x2, y2) instanceof Pawn)) {
+        Figure figure = board.getElementAt(x2, y2);
+
+        if (!(figure instanceof Pawn)) {
             return;
         }
-        if ((board.getElementAt(x2, y2).getColor().equalsIgnoreCase("White") && y2 == 7)
-                || (board.getElementAt(x2, y2).getColor().equalsIgnoreCase("Black") && y2 == 0)) {
+        if ((figure.isWhite() && y2 == 7)
+                || (figure.isBlack() && y2 == 0)) {
 
             String[] choice = new String[4];
             choice[0] = "Queen";
@@ -268,32 +268,25 @@ public class BoardMovement {
                     "Choose a Figure", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, choice, null);
 
+            String color = figure.getColor();
             switch (a) {
                 case -1:
                     eightRank(x2, y2);
                     break;
                 case 0: {
-                    board.setElementAt(x2, y2, new Queen(board.getElementAt(x2, y2)
-                            .getColor(), x2, y2, board));
-                    board.getElementAt(x2, y2).setPosition(x2, y2);
+                    board.setElementAt(x2, y2, new Queen(color, x2, y2, board));
                     break;
                 }
                 case 1: {
-                    board.setElementAt(x2, y2, new Rook(board.getElementAt(x2, y2)
-                            .getColor(), x2, y2, board));
-                    board.getElementAt(x2, y2).setPosition(x2, y2);
+                    board.setElementAt(x2, y2, new Rook(color, x2, y2, board));
                     break;
                 }
                 case 2: {
-                    board.setElementAt(x2, y2, new Knight(board
-                            .getElementAt(x2, y2).getColor(), x2, y2, board));
-                    board.getElementAt(x2, y2).setPosition(x2, y2);
+                    board.setElementAt(x2, y2, new Knight(color, x2, y2, board));
                     break;
                 }
                 case 3: {
-                    board.setElementAt(x2, y2, new Bishop(board
-                            .getElementAt(x2, y2).getColor(), x2, y2, board));
-                    board.getElementAt(x2, y2).setPosition(x2, y2);
+                    board.setElementAt(x2, y2, new Bishop(color, x2, y2, board));
                     break;
                 }
             }
@@ -309,8 +302,8 @@ public class BoardMovement {
         if (!(board.getElementAt(xFrom, yFrom) instanceof Pawn))
             return false;
 
-        int pawnMoveVector = board.getPlayerTurn().equalsIgnoreCase("White") ? 1 : -1;
-        int rankRequired = board.getPlayerTurn().equalsIgnoreCase("White") ? 4 : 3;
+        int pawnMoveVector = board.isWhiteTurn() ? 1 : -1;
+        int rankRequired = board.isWhiteTurn() ? 4 : 3;
         boolean currentMoveCondition = (yTo - yFrom) * pawnMoveVector == 1 && (Math.abs(xFrom - xTo) == 1)
                 && yFrom == rankRequired;
         boolean lastMoveCondition = (board.getElementAt(lastMove[2], lastMove[3]) instanceof Pawn)

@@ -21,20 +21,19 @@ public class Pawn extends Figure {
 
     public Pawn(String Col, int x, int y, Board b) {
         this.color = Col;
-
-        if (Col.equalsIgnoreCase("white"))
-            this.icon = iconWhite;
-        else
-            this.icon = iconBlack;
-
         this.position[0] = x;
         this.position[1] = y;
         super.board = b;
+
+        if (isWhite())
+            this.icon = iconWhite;
+        else
+            this.icon = iconBlack;
     }
 
     @Override
     public void markAttacks() {
-        int direction = this.color.equalsIgnoreCase("White") ? 1 : -1;
+        int direction = isWhite() ? 1 : -1;
         board.attacked(this.getX() + 1, this.getY() + direction, this.getColor());
         board.attacked(this.getX() - 1, this.getY() + direction, this.getColor());
     }
@@ -42,7 +41,7 @@ public class Pawn extends Figure {
     @Override
     public List<Move> getAvailableMoves() {
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
-        int moveVector = color.equalsIgnoreCase("white") ? 1 : -1;
+        int moveVector = isWhite() ? 1 : -1;
 
         int[][] pawnPattern = {
                 {0, 1}, {0, 2}, {-1, 1}, {1, 1}
@@ -73,7 +72,7 @@ public class Pawn extends Figure {
         if (!(board.getElementAt(x, y) instanceof Field) && (x == this.getX()))
             return false;
 
-        if (this.getColor().equalsIgnoreCase("White")) {
+        if (this.isWhite()) {
             // Two Forward
             if (this.getY() == 1
                     && (this.getY() - y) == -2

@@ -21,16 +21,16 @@ public class King extends Figure {
             "images\\black_set\\King.png");
 
     public King(String Col, int x, int y, Board b) {
-        if (Col.equalsIgnoreCase("white"))
-            this.icon = iconWhite;
-        else
-            this.icon = iconBlack;
-
         moved = false;
         super.color = Col;
         super.position[0] = x;
         super.position[1] = y;
         super.board = b;
+
+        if (isWhite())
+            this.icon = iconWhite;
+        else
+            this.icon = iconBlack;
     }
 
     @Override

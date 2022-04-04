@@ -20,15 +20,15 @@ public class Queen extends Figure {
             "images\\black_set\\Queen.png");
 
     public Queen(String Col, int x, int y, Board b) {
-        if (Col.equalsIgnoreCase("white"))
-            this.icon = iconWhite;
-        else
-            this.icon = iconBlack;
-
         super.color = Col;
         super.position[0] = x;
         super.position[1] = y;
         super.board = b;
+
+        if (isWhite())
+            this.icon = iconWhite;
+        else
+            this.icon = iconBlack;
     }
 
     @Override

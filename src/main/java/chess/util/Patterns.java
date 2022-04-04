@@ -82,7 +82,7 @@ public class Patterns {
         BoardMovement movement = GlobalContext.getBoardMovement();
         Figure figure = board.getElementAt(x, y);
 
-        int pawnDirection = figure.getColor().equalsIgnoreCase("white") ? 1 : -1;
+        int pawnDirection = figure.isWhite() ? 1 : -1;
         int[][] pattern = new int[][]{{1, pawnDirection}, {-1, pawnDirection}};
 
         return Arrays.stream(pattern).filter(position -> movement.validCoordinates(x, y, x + position[0], y + position[1]))

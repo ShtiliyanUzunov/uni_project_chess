@@ -19,15 +19,15 @@ public class Bishop extends Figure {
             "images\\black_set\\Bishop.png");
 
     public Bishop(String color, int x, int y, Board b) {
-        if (color.equalsIgnoreCase("white"))
-            this.icon = iconWhite;
-        else
-            this.icon = iconBlack;
-
         super.color = color;
         super.position[0] = x;
         super.position[1] = y;
         super.board = b;
+
+        if (isWhite())
+            this.icon = iconWhite;
+        else
+            this.icon = iconBlack;
     }
 
     @Override
