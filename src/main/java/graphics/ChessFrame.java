@@ -101,7 +101,7 @@ public class ChessFrame extends JFrame {
         menu.add(historyMenu);
         historyMenu.add(backward = new JMenuItem("Backward (CTRL + 1)"));
         historyMenu.add(forward = new JMenuItem("Forward (CTRL + 2)"));
-        historyMenu.add(moveToStart = new JMenu("From begining (CTR + 3)"));
+        historyMenu.add(moveToStart = new JMenuItem("From beginning (CTR + 3)"));
         registerHistoryActions();
 
         JMenu viewMenu = new JMenu("View");

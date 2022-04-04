@@ -1,3 +1,3 @@
 #1 - Bug with nPassant discovered check.
 #2 - Add additional rules for insufficient material. E.g. - 1 knight/1 Bishop each side
-#3 - Add choices for 8th rank figures
+#3 - Board state doesn't represent if figure has moved. This impacts castling
