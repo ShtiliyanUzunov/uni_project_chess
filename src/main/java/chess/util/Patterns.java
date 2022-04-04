@@ -38,6 +38,15 @@ public class Patterns {
             {-2, 1}, {-2, -1}
     };
 
+    public static List<Figure> selectUsingKingPatternFromPosition(int x, int y) {
+        Board board = GlobalContext.getBoard();
+
+        return Arrays.stream(kingMovePattern).filter((pattern) -> {
+            int targetX = x + pattern[0];
+            int targetY = y + pattern[1];
+            return GlobalContext.getBoardMovement().isPathClear(x, y, targetX, targetY);
+        }).map((position) -> board.getElementAt(x + position[0], y + position[1])).collect(Collectors.toList());
+    }
 
     public static List<Figure> selectUsingHorizontalAndVerticalPatternFromPosition(int x, int y) {
         Board board = GlobalContext.getBoard();
@@ -78,7 +87,5 @@ public class Patterns {
 
         return Arrays.stream(pattern).filter(position -> movement.validCoordinates(x, y, x + position[0], y + position[1]))
                 .map((position) -> board.getElementAt(x + position[0], y + position[1])).collect(Collectors.toList());
-
-
     }
 }

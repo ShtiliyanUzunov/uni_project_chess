@@ -4,14 +4,72 @@ import chess.Board;
 import chess.services.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
+import communication.ChannelNames;
+import communication.EventBus;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 //Plays a random move
 public class NaiveAgent {
 
-    public void play() {
+    private final EventBus eventBus = EventBus.getEventBus();
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final int delay;
+    private boolean playAllowed = true;
+
+    public NaiveAgent(int delay) {
+        this.delay = delay;
+        registerEvents();
+    }
+
+    private synchronized void registerEvents() {
+        eventBus.register(ChannelNames.PAUSE_AGENTS, (Object obj) -> {
+            setPlayAllowed(false);
+            return null;
+        });
+
+        eventBus.register(ChannelNames.RESUME_AGENTS, (Object obj) -> {
+            if (getPlayAllowed()) {
+                return null;
+            }
+
+            setPlayAllowed(true);
+            play();
+            return null;
+        });
+    }
+
+    private synchronized void setPlayAllowed(boolean allowed) {
+        playAllowed = allowed;
+    }
+
+    private synchronized boolean getPlayAllowed() {
+        return playAllowed;
+    }
+
+    public synchronized void play() {
+        executorService.execute(() -> {
+            applyDelay();
+
+            if (playAllowed) {
+                System.out.println(Thread.currentThread().getName());
+                playAMove();
+            }
+        });
+    }
+
+    private void applyDelay() {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void playAMove() {
         Board board = GlobalContext.getBoard();
         BoardMovement boardMovement = GlobalContext.getBoardMovement();
 

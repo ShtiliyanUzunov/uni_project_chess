@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 
 import chess.Board;
 import chess.util.Move;
+import chess.util.Patterns;
 
 import static chess.util.Patterns.kingMovePattern;
 
@@ -34,10 +35,8 @@ public class King extends Figure {
 
     @Override
     public void markAttacks() {
-        Arrays.stream(kingMovePattern).forEach((pattern) -> {
-            board.attacked(this.getX() + pattern[0], this.getY() + pattern[1], this.getColor());
-        });
-
+        Patterns.selectUsingKingPatternFromPosition(this.getX(), this.getY())
+                .forEach(fig -> board.attacked(fig.getX(), fig.getY(), this.getColor()));
     }
 
     @Override

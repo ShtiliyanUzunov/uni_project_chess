@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import chess.figures.*;
-import chess.services.GlobalContext;
 import chess.util.Move;
 import chess.util.PureFunction;
 import communication.ChannelNames;
@@ -68,10 +67,31 @@ public class Board implements Serializable {
     }
 
     @PureFunction
+    public boolean isGameOver() {
+        return checkMate() || stalemate() || insufficientMaterial();
+    }
+
+    @PureFunction
     public boolean kingChecked() {
         Figure king = getKingInTurn();
 
         return king.isAttByOpponent();
+    }
+
+    @PureFunction
+    public boolean insufficientMaterial() {
+        //TODO: Add additional rules for insufficient material. E.g. - 1 knight/1 Bishop each side
+        int whiteMaterial = Arrays.stream(chessBoard).flatMap(x -> Arrays.stream(x).filter(
+                fig -> !(fig instanceof Field) && fig.getColor().equalsIgnoreCase("white")))
+                .map(Figure::getMaterialValue)
+                .reduce(0, Integer::sum);
+
+        int blackMaterial = Arrays.stream(chessBoard).flatMap(x -> Arrays.stream(x).filter(
+                fig -> !(fig instanceof Field) && fig.getColor().equalsIgnoreCase("black")))
+                .map(Figure::getMaterialValue)
+                .reduce(0, Integer::sum);
+
+        return whiteMaterial == 0 && blackMaterial == 0;
     }
 
     @PureFunction

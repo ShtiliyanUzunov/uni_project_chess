@@ -20,10 +20,13 @@ import javax.swing.JPanel;
 public class ChessPanel extends JPanel {
 
     private final BoardMovement boardMovement = GlobalContext.getBoardMovement();
-    private ChessFrame parent;
+    private final ChessFrame parent;
 
     private static int xFrom = -1, xTo = -1, yFrom = -1, yTo = -1;
     private boolean indicatorSelect = false;
+
+    private static final EventBus eventBus = EventBus.getEventBus();
+
     private final Image moveOption = new ImageIcon("images\\Move_Option.png").getImage();
     private final Image select = new ImageIcon("images\\Select.png").getImage();
     private final Image attByWhite = new ImageIcon("images\\AttByWhite.png").getImage();
@@ -34,7 +37,14 @@ public class ChessPanel extends JPanel {
         this.parent = parent;
         setSize(600 , 600);
         addMouseListener(new MA());
+        eventBus.register(ChannelNames.MOVE_FINISHED, this::onMoveFinished);
     }
+
+    private Void onMoveFinished(Object o) {
+        repaint();
+        return null;
+    }
+
 
     private void nullifyFromSelection() {
         xFrom = -1;
@@ -63,6 +73,7 @@ public class ChessPanel extends JPanel {
                 else {
                     nullifyFromSelection();
                 }
+                repaint();
             } else {
                 xTo = e.getX() / 75;
                 yTo = 7 - e.getY() / 75;
@@ -72,7 +83,6 @@ public class ChessPanel extends JPanel {
                 nullifyToSelection();
                 indicatorSelect = false;
             }
-            repaint();
         }
     }
 

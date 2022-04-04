@@ -114,6 +114,7 @@ public class BoardMovement {
         List<Figure> figuresHandV = new ArrayList<>(Patterns.selectUsingHorizontalAndVerticalPatternFromPosition(king.getX(), king.getY()));
         List<Figure> figuresKn = new ArrayList<>(Patterns.selectUsingKnightPatternFromPosition(king.getX(), king.getY()));
         List<Figure> figuresPawn = new ArrayList<>(Patterns.selectUsingPawnAttackPatternFromPosition(king.getX(), king.getY()));
+        List<Figure> figuresKing = new ArrayList<>(Patterns.selectUsingKingPatternFromPosition(king.getX(), king.getY()));
 
         int enemyFigures = 0;
         enemyFigures += countFiguresByClass(figuresDiag,
@@ -124,6 +125,8 @@ public class BoardMovement {
                 Arrays.asList(new Class<?>[]{Knight.class}), figureSource.getColor());
         enemyFigures += countFiguresByClass(figuresPawn,
                 Arrays.asList(new Class<?>[]{Pawn.class}), figureSource.getColor());
+        enemyFigures += countFiguresByClass(figuresKing,
+                Arrays.asList(new Class<?>[]{King.class}), figureSource.getColor());
 
         board.setElementAt(xFrom, yFrom, figureSource);
         board.setElementAt(xTo, yTo, figureTarget);

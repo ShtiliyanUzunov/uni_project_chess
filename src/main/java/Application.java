@@ -7,9 +7,9 @@ public class Application {
     public static void main(String[] args) {
         Game game = Game.builder()
                 .gameInterface(GameInterface.GUI)
-                .whiteAgent(Agent.HUMAN)
+                .whiteAgent(Agent.BOT)
                 .blackAgent(Agent.BOT)
-                .moveDelay(1000)
+                .moveDelay(10)
                 .build();
         game.start();
     }

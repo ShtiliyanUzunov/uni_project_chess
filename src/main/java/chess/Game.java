@@ -19,18 +19,28 @@ public class Game {
     private Agent whiteAgent;
     private Agent blackAgent;
     private GameInterface gameInterface;
+    private NaiveAgent naiveAgent;
     private int moveDelay;
 
     private static EventBus eventBus = EventBus.getEventBus();
 
     public void start() {
-        configureAgents();
+        configureAgent();
+        configureNotifications();
         startInterface();
     }
 
+    private void configureNotifications() {
+        GlobalContext.getConfiguration().setEnablePopups(true);
 
+        if (whiteAgent == Agent.BOT && blackAgent == Agent.BOT) {
+            GlobalContext.getConfiguration().setEnablePopups(false);
+        }
 
-    private void configureAgents() {
+    }
+
+    private void configureAgent() {
+        naiveAgent = new NaiveAgent(moveDelay);
         configureAgent(whiteAgent, "white");
         configureAgent(blackAgent, "black");
     }
@@ -40,18 +50,17 @@ public class Game {
             return;
         }
 
-        NaiveAgent naiveAgent = new NaiveAgent();
-
         Board board = GlobalContext.getBoard();
+
+        if (whiteAgent == Agent.BOT) {
+            naiveAgent.play();
+        }
+
         eventBus.register(ChannelNames.MOVE_FINISHED, (Object param) -> {
             if (board.getPlayerTurn().equalsIgnoreCase(color)) {
-                try {
-                    Thread.sleep(moveDelay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (!board.isGameOver()) {
+                    naiveAgent.play();
                 }
-
-                naiveAgent.play();
             }
             return null;
         });
@@ -60,13 +69,7 @@ public class Game {
     private void startInterface() {
         switch (gameInterface) {
             case GUI:
-                Runnable guiThread = new Runnable() {
-                    @Override
-                    public void run() {
-                        new ChessFrame();
-                    }
-                };
-                guiThread.run();
+                new ChessFrame();
                 break;
             case CONSOLE:
                 throw new IllegalArgumentException("Console interface not supported yet");

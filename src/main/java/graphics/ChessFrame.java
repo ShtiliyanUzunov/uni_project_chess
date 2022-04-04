@@ -20,6 +20,9 @@ public class ChessFrame extends JFrame {
     private JMenuItem loadGame;
     private JMenuItem saveGame;
 
+    private JMenuItem pauseAgents;
+    private JMenuItem resumeAgents;
+
     @Getter
     private JCheckBoxMenuItem showAttacks;
     @Getter
@@ -39,7 +42,7 @@ public class ChessFrame extends JFrame {
         setLayout(l);
 
         add(chessPanel = new ChessPanel(this));
-        add(infoPanel = new InfoPanel(this),BorderLayout.EAST);
+        add(infoPanel = new InfoPanel(this), BorderLayout.EAST);
 
         setTitle("Chess Game");
         setVisible(true);
@@ -75,18 +78,24 @@ public class ChessFrame extends JFrame {
         JMenuBar menu = new JMenuBar();
         setJMenuBar(menu);
 
-        JMenu gameMenu;
-        menu.add(gameMenu = new JMenu("Game"));
+        JMenu gameMenu = new JMenu("Game");
+        menu.add(gameMenu);
 
-        JMenu viewMenu;
-        menu.add(viewMenu = new JMenu("View"));
+        JMenu agentMenu = new JMenu("Agents");
+        menu.add(agentMenu);
+        agentMenu.add(pauseAgents = new JMenuItem("Pause agents"));
+        agentMenu.add(resumeAgents = new JMenuItem("Resume agents"));
+        setRegisterAgentActions();
+
+        JMenu viewMenu = new JMenu("View");
+        menu.add(viewMenu);
         viewMenu.add(showAttacks = new JCheckBoxMenuItem("Show attacks", null, false));
         viewMenu.add(showAvailableMoves = new JCheckBoxMenuItem("Show available moves", null, true));
         setShowAttacksAction();
         setShowAvailableMovesAction();
 
-        JMenu aboutMenu;
-        menu.add(aboutMenu = new JMenu("About"));
+        JMenu aboutMenu = new JMenu("About");
+        menu.add(aboutMenu);
 
         gameMenu.add(newGame = new JMenuItem("New game"));
         gameMenu.add(saveGame = new JMenuItem("Save game"));
@@ -99,6 +108,16 @@ public class ChessFrame extends JFrame {
         setSaveGameAction();
         setLoadGameAction();
         setAboutAction();
+    }
+
+    private void setRegisterAgentActions() {
+        pauseAgents.addActionListener(e -> {
+            eventBus.post(ChannelNames.PAUSE_AGENTS, null);
+        });
+
+        resumeAgents.addActionListener(e -> {
+            eventBus.post(ChannelNames.RESUME_AGENTS, null);
+        });
     }
 
     private void delayedRepaint() {

@@ -10,6 +10,8 @@ public class ChannelNames {
     public static final String UI_CHECKMATE = "ui:checkmate!";
     public static final String UI_INFO_UPDATE = "ui:infoUpdate";
     public static final String MOVE_FINISHED = "moveFinished";
+    public static final String PAUSE_AGENTS = "pauseAgents";
+    public static final String RESUME_AGENTS = "resumeAgents";
 
 }
 
