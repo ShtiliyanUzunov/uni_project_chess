@@ -2,6 +2,7 @@ package chess.figures;
 
 import javax.swing.ImageIcon;
 import chess.Board;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 import chess.util.Patterns;
 
@@ -49,6 +50,13 @@ public class Rook extends Figure {
     @Override
     public int getMaterialValue() {
         return 5;
+    }
+
+    @Override
+    public int getEncoding() {
+        if (isWhite())
+            return FigureEncodings.WHITE_ROOK;
+        return FigureEncodings.BLACK_ROOK;
     }
 
     @Override

@@ -8,6 +8,5 @@ import lombok.Setter;
 public class Configuration {
 
     private boolean enablePopups;
-    private boolean enableHistory;
 
 }

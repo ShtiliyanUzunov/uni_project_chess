@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 import chess.util.Patterns;
 
@@ -31,6 +32,13 @@ public class King extends Figure {
             this.icon = iconWhite;
         else
             this.icon = iconBlack;
+    }
+
+    @Override
+    public int getEncoding() {
+        if (isWhite())
+            return FigureEncodings.WHITE_KING;
+        return FigureEncodings.BLACK_KING;
     }
 
     @Override

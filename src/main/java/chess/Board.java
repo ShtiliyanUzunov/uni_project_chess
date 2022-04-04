@@ -4,9 +4,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import chess.figures.*;
 import chess.services.History;
+import chess.util.EncodedBoard;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 import chess.util.PureFunction;
 import communication.ChannelNames;
@@ -184,6 +187,7 @@ public class Board implements Serializable {
             }
         }
 
+        history.saveState();
         eventBus.post(ChannelNames.MOVE_FINISHED, null);
     }
 
@@ -239,5 +243,37 @@ public class Board implements Serializable {
             }
         }
         return new int[]{matWhite, matBlack};
+    }
+
+    public EncodedBoard getEncodedState() {
+        Integer[][] encodings = Arrays.stream(chessBoard).map(x -> Arrays.stream(x)
+                .map(Figure::getEncoding)
+                .toArray(Integer[]::new)
+        ).toArray(Integer[][]::new);
+
+        return EncodedBoard.builder()
+                .encodedBoard(encodings)
+                .whiteKingCoordinates(Arrays.copyOf(getWhiteKing().getPosition(), 2))
+                .blackKingCoordinates(Arrays.copyOf(getBlackKing().getPosition(), 2))
+                .lastMove(Arrays.copyOf(lastMove, lastMove.length))
+                .playerTurn(playerTurn)
+                .build();
+    }
+
+    public void restoreFromEncodedState(EncodedBoard encodedBoard) {
+        setLastMove(encodedBoard.getLastMove());
+        setPlayerTurn(encodedBoard.getPlayerTurn());
+
+        Integer[][] encodings = encodedBoard.getEncodedBoard();
+        for (int i = 0; i < encodings.length; i++) {
+            for (int j = 0; j < encodings[i].length; j++) {
+                setElementAt(i, j, FigureEncodings.getFigureFromEncoding(encodings[i][j], this));
+            }
+        }
+
+        int[] wkCoordinates = encodedBoard.getWhiteKingCoordinates();
+        int[] bkCoordinates = encodedBoard.getBlackKingCoordinates();
+        whiteKing = getElementAt(wkCoordinates[0], wkCoordinates[1]);
+        blackKing = getElementAt(bkCoordinates[0], bkCoordinates[1]);
     }
 }

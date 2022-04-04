@@ -39,6 +39,8 @@ public abstract class Figure implements Serializable {
 
     public abstract int getMaterialValue();
 
+    public abstract int getEncoding();
+
     public void nullAttack() {
         isAttByWhite = false;
         isAttByBlack = false;

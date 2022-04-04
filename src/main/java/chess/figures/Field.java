@@ -1,5 +1,6 @@
 package chess.figures;
 
+import chess.util.FigureEncodings;
 import chess.util.Move;
 
 import java.util.ArrayList;
@@ -13,6 +14,11 @@ public class Field extends Figure {
     @Override
     public List<Move> getAvailableMoves() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public int getEncoding() {
+        return FigureEncodings.EMPTY_FIELD;
     }
 
     @Override

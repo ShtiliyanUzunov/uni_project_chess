@@ -11,11 +11,12 @@ public class GlobalContext {
     private static Configuration configuration;
 
     static {
+        configuration = new Configuration();
         boardMovement = new BoardMovement();
         board = new Board();
         board.initializeBoard();
         gameServices = new GameServices();
-        configuration = new Configuration();
+
     }
 
     public static Board getBoard() {

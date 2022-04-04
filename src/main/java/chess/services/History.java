@@ -1,8 +1,8 @@
 package chess.services;
 
-import chess.Board;
 import chess.figures.Field;
 import chess.figures.Figure;
+import chess.util.EncodedBoard;
 import chess.util.Move;
 import communication.ChannelNames;
 import communication.EventBus;
@@ -12,31 +12,24 @@ import java.util.List;
 
 public class History {
 
-    private boolean historyEnabled = false;
+    private int currentState = 0;
 
-    private int currentMove = 0;
+    private List<EncodedBoard> boardHistory = new ArrayList<>();
 
-    private List<Move> boardHistory = new ArrayList<>();
-
-    public void saveMove(Move move) {
-        if (!GlobalContext.getConfiguration().isEnableHistory()) {
-            return;
-        }
-
-        boardHistory = boardHistory.subList(0, currentMove);
-        boardHistory.add(move);
-        currentMove++;
+    public void saveState() {
+        boardHistory = boardHistory.subList(0, currentState);
+        boardHistory.add(GlobalContext.getBoard().getEncodedState());
+        currentState++;
     }
 
     public void clear() {
-        currentMove = 0;
+        currentState = 0;
         boardHistory.clear();
     }
 
     public Void moveToStart(Object obj) {
-        while (currentMove != 0) {
-            backwardsWrapper(false);
-        }
+        currentState = 1;
+        restoreState(-1);
 
         EventBus.getEventBus().post(ChannelNames.MOVE_FINISHED, null);
         return null;
@@ -48,16 +41,12 @@ public class History {
     }
 
     private void forwardWrapper(boolean applyNotification) {
-        if (!GlobalContext.getConfiguration().isEnableHistory()) {
+        if (currentState == boardHistory.size()) {
             return;
         }
 
-        if (currentMove == boardHistory.size()) {
-            return;
-        }
-
-        restoreMove(false);
-        currentMove++;
+        restoreState(0);
+        currentState++;
 
         if (applyNotification) {
             EventBus.getEventBus().post(ChannelNames.MOVE_FINISHED, null);
@@ -71,45 +60,24 @@ public class History {
     }
 
     private void backwardsWrapper(boolean applyNotification) {
-        if (!GlobalContext.getConfiguration().isEnableHistory()) {
+        if (currentState - 1 == 0) {
             return;
         }
 
-        if (currentMove == 0) {
-            return;
-        }
-
-        currentMove--;
-        restoreMove(true);
+        currentState--;
+        restoreState(-1);
         if (applyNotification) {
             EventBus.getEventBus().post(ChannelNames.MOVE_FINISHED, null);
         }
     }
 
-    private void restoreMove(boolean backwards) {
-        Move move = boardHistory.get(currentMove);
-        Figure source = move.getSourceFigure();
-        Figure target = backwards ? move.getTargetFigure(): new Field();
-
-        int[] cordsSource = backwards ? move.getSourcePosition() : move.getTargetPosition();
-        int[] cordsTarget = backwards ? move.getTargetPosition() : move.getSourcePosition();
-
-        source.setBoard(GlobalContext.getBoard());
-        target.setBoard(GlobalContext.getBoard());
-
-        if (backwards) {
-            GlobalContext.getBoard().setPlayerTurn(source.getColor());
-        } else {
-            GlobalContext.getBoard().setPlayerTurn(source.oppositeColor());
-        }
-
-
-        GlobalContext.getBoard().setElementAt(cordsSource[0], cordsSource[1], source);
-        GlobalContext.getBoard().setElementAt(cordsTarget[0], cordsTarget[1], target);
+    private void restoreState(int increment) {
+        EncodedBoard state = boardHistory.get(currentState + increment);
+        GlobalContext.getBoard().restoreFromEncodedState(state);
     }
 
     public String getHistoryInfo() {
-        return String.format("Move: %s/%s <br/>", currentMove, boardHistory.size());
+        return String.format("Move: %s/%s <br/>", currentState - 1, boardHistory.size() - 1);
     }
 
 }

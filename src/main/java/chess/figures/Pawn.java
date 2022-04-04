@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import chess.Board;
 import chess.services.BoardMovement;
 import chess.services.GlobalContext;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 
 import java.util.Arrays;
@@ -66,6 +67,13 @@ public class Pawn extends Figure {
     @Override
     public int getMaterialValue() {
         return 1;
+    }
+
+    @Override
+    public int getEncoding() {
+        if (isWhite())
+            return FigureEncodings.WHITE_PAWN;
+        return FigureEncodings.BLACK_PAWN;
     }
 
     @Override

@@ -39,8 +39,6 @@ public class BoardMovement {
 
         applyMoveCallbacks();
 
-        board.getHistory().saveMove(new Move(xFrom, yFrom, xTo, yTo, true));
-
         board.setPlayerTurn(figure.oppositeColor());
         board.setLastMove(new int[]{xFrom, yFrom, xTo, yTo});
 
@@ -49,6 +47,7 @@ public class BoardMovement {
         board.setElementAt(xFrom, yFrom, new Field());
         eightRank(xTo, yTo);
 
+        board.getHistory().saveState();
         eventBus.post(ChannelNames.MOVE_FINISHED, null);
         long end = System.currentTimeMillis();
         System.out.printf("Move exec time: %d%n", end - start);

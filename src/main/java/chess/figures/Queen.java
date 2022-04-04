@@ -3,6 +3,7 @@ package chess.figures;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 import chess.util.Patterns;
 
@@ -56,6 +57,13 @@ public class Queen extends Figure {
     @Override
     public int getMaterialValue() {
         return 9;
+    }
+
+    @Override
+    public int getEncoding() {
+        if (isWhite())
+            return FigureEncodings.WHITE_QUEEN;
+        return FigureEncodings.BLACK_QUEEN;
     }
 
     @Override

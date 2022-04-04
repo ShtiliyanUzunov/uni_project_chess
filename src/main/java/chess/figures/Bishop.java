@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 import chess.util.Patterns;
 
@@ -30,6 +31,7 @@ public class Bishop extends Figure {
             this.icon = iconBlack;
     }
 
+
     @Override
     public void markAttacks() {
         Patterns.selectUsingDiagonalPatternFromPosition(this.getX(), this.getY())
@@ -49,6 +51,13 @@ public class Bishop extends Figure {
     @Override
     public int getMaterialValue() {
         return 3;
+    }
+
+    @Override
+    public int getEncoding() {
+        if (isWhite())
+            return FigureEncodings.WHITE_BISHOP;
+        return FigureEncodings.BLACK_BISHOP;
     }
 
     @Override

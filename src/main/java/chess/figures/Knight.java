@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import chess.Board;
+import chess.util.FigureEncodings;
 import chess.util.Move;
 
 import static chess.util.Patterns.selectUsingKnightPatternFromPosition;
@@ -50,6 +51,13 @@ public class Knight extends Figure {
     @Override
     public int getMaterialValue() {
         return 3;
+    }
+
+    @Override
+    public int getEncoding() {
+        if (isWhite())
+            return FigureEncodings.WHITE_KNIGHT;
+        return FigureEncodings.BLACK_KNIGHT;
     }
 
 
