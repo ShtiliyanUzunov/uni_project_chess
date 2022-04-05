@@ -6,8 +6,14 @@ import chess.util.Agent;
 import chess.util.GameInterface;
 import communication.ChannelNames;
 import communication.EventBus;
-import graphics.ChessFrame;
+import user_interface.console.ConsoleInterface;
+import user_interface.graphics.ChessFrame;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +26,7 @@ public class Game {
     private Agent blackAgent;
     private GameInterface gameInterface;
     private NaiveAgent naiveAgent;
+    private boolean enableSystemLogging;
     private int moveDelay;
 
     private static EventBus eventBus = EventBus.getEventBus();
@@ -27,6 +34,7 @@ public class Game {
     public void start() {
         configureAgent();
         configureNotifications();
+        configureLogging();
         startInterface();
     }
 
@@ -39,17 +47,25 @@ public class Game {
 
     }
 
-    private void configureAgent() {
-        naiveAgent = new NaiveAgent(moveDelay);
-        configureAgent(whiteAgent, "white");
-        configureAgent(blackAgent, "black");
+    private void configureLogging() {
+        GlobalContext.getConfiguration().setEnableLogging(enableSystemLogging);
     }
 
-    private void configureAgent(Agent agent, String color) {
-        if (agent == Agent.HUMAN) {
+    private void configureAgent() {
+        List<String> colors = new ArrayList<>();
+        if (whiteAgent == Agent.BOT) {
+            colors.add("White");
+        }
+
+        if (blackAgent == Agent.BOT) {
+            colors.add("Black");
+        }
+
+        if (colors.size() == 0) {
             return;
         }
 
+        naiveAgent = new NaiveAgent(moveDelay);
         Board board = GlobalContext.getBoard();
 
         if (whiteAgent == Agent.BOT) {
@@ -57,7 +73,7 @@ public class Game {
         }
 
         eventBus.register(ChannelNames.MOVE_FINISHED, (Object param) -> {
-            if (board.getPlayerTurn().equalsIgnoreCase(color)) {
+            if (colors.contains(board.getPlayerTurn())) {
                 if (!board.isGameOver()) {
                     naiveAgent.play();
                 }
@@ -72,7 +88,8 @@ public class Game {
                 new ChessFrame();
                 break;
             case CONSOLE:
-                throw new IllegalArgumentException("Console interface not supported yet");
+                new ConsoleInterface();
+                break;
             case HEADLESS:
                 throw new IllegalArgumentException("Headless interface not supported yet");
         }

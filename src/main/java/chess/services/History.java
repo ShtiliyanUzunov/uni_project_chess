@@ -35,6 +35,10 @@ public class History {
         return null;
     }
 
+    public int getSize() {
+        return boardHistory.size();
+    }
+
     public Void forward(Object obj) {
         forwardWrapper(true);
         return null;

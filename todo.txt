@@ -1,3 +1,9 @@
 #1 - Bug with nPassant discovered check.
 #2 - Add additional rules for insufficient material. E.g. - 1 knight/1 Bishop each side
 #3 - Board state doesn't represent if figure has moved. This impacts castling
+
+#4 - Refactor Board to keep castling information. This will solve #3 E.g.:
+    env.white_king_castle_possible
+    env.white_queen_castle_possible
+    env.black_king_castle_possible
+    env.black_queen_castle_possible

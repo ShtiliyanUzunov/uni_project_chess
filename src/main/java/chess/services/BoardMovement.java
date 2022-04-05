@@ -42,15 +42,17 @@ public class BoardMovement {
         board.setPlayerTurn(figure.oppositeColor());
         board.setLastMove(new int[]{xFrom, yFrom, xTo, yTo});
 
+        Move moveInfo = new Move(xFrom, yFrom, xTo, yTo);
+
         figure.setMoved(true);
         board.setElementAt(xTo, yTo, figure);
         board.setElementAt(xFrom, yFrom, new Field());
         eightRank(xTo, yTo);
 
         board.getHistory().saveState();
-        eventBus.post(ChannelNames.MOVE_FINISHED, null);
+        eventBus.post(ChannelNames.MOVE_FINISHED, moveInfo);
         long end = System.currentTimeMillis();
-        System.out.printf("Move exec time: %d%n", end - start);
+        Logging.log(String.format("Move exec time: %d%n", end - start));
     }
 
     @NotPureFunction

@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import chess.figures.*;
 import chess.services.History;
+import chess.services.Logging;
 import chess.util.EncodedBoard;
 import chess.util.FigureEncodings;
 import chess.util.Move;
@@ -58,18 +58,18 @@ public class Board implements Serializable {
             for (int j = 0; j < 8; j++)
                 availableMovesForPlayer.addAll(chessBoard[i][j].getAvailableMoves());
         long end = System.currentTimeMillis();
-        System.out.println("Available moves calc: " + (end - start));
+        Logging.log("Available moves calc time: " + (end - start));
 
         if (checkMate()) {
-            EventBus.getEventBus().post(ChannelNames.UI_CHECKMATE, null);
+            EventBus.getEventBus().post(ChannelNames.CHECKMATE, null);
         }
 
         if (kingChecked() && !checkMate()) {
-            EventBus.getEventBus().post(ChannelNames.UI_CHECK, null);
+            EventBus.getEventBus().post(ChannelNames.CHECK, null);
         }
 
         if (stalemate()) {
-            EventBus.getEventBus().post(ChannelNames.UI_STALEMATE, null);
+            EventBus.getEventBus().post(ChannelNames.STALEMATE, null);
         }
 
         EventBus.getEventBus().post(ChannelNames.UI_INFO_UPDATE, null);
@@ -106,7 +106,13 @@ public class Board implements Serializable {
                 .map(Figure::getMaterialValue)
                 .reduce(0, Integer::sum);
 
-        return whiteMaterial == 0 && blackMaterial == 0;
+        boolean insufficient = whiteMaterial == 0 && blackMaterial == 0;
+
+        if (insufficient) {
+            eventBus.post(ChannelNames.INSUFFICIENT_MATERIAL ,null);
+        }
+
+        return insufficient;
     }
 
     @PureFunction

@@ -55,7 +55,6 @@ public class NaiveAgent {
             applyDelay();
 
             if (playAllowed) {
-                System.out.println(Thread.currentThread().getName());
                 playAMove();
             }
         });

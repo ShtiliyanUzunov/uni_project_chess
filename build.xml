@@ -12,7 +12,7 @@
     </target>
 
     <target name="jar">
-        <mkdir dir="build/classes/graphics/"/>
+        <mkdir dir="build/classes/user_interface.graphics/"/>
         <jar destfile="build/jar/ChessFrame.jar" basedir="build/classes">
             <manifest>
                 <attribute name="Main-Class" value="ChessFrame"/>

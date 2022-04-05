@@ -1,4 +1,4 @@
-package graphics;
+package user_interface.graphics;
 
 import java.awt.BorderLayout;
 import javax.swing.JDialog;

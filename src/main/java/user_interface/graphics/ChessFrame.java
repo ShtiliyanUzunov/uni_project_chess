@@ -1,4 +1,4 @@
-package graphics;
+package user_interface.graphics;
 
 import communication.ChannelNames;
 import communication.EventBus;

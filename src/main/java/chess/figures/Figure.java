@@ -117,7 +117,7 @@ public abstract class Figure implements Serializable {
             int xTo = xFrom + p[0];
             int yTo = yFrom + p[1];
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(p -> new Move(getX(), getY(), getX() + p[0], getY() + p[1], false)).collect(Collectors.toList());
+        }).map(p -> new Move(getX(), getY(), getX() + p[0], getY() + p[1])).collect(Collectors.toList());
 
     }
 

@@ -1,4 +1,4 @@
-package graphics;
+package user_interface.graphics;
 
 import chess.Board;
 import chess.services.GlobalContext;
@@ -9,7 +9,6 @@ import communication.EventBus;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InfoPanel extends JPanel {
 

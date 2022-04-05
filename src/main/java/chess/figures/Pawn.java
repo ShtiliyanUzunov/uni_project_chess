@@ -54,7 +54,7 @@ public class Pawn extends Figure {
             int xTo = xFrom + pattern[0];
             int yTo = yFrom + (moveVector * pattern[1]);
             return boardMovement.isMoveValid(xFrom, yFrom, xTo, yTo, false);
-        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + moveVector * pattern[1], false))
+        }).map(pattern -> new Move(getX(), getY(), getX() + pattern[0], getY() + moveVector * pattern[1]))
                 .collect(Collectors.toList());
 
     }

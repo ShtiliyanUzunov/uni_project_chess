@@ -1,4 +1,4 @@
-package graphics;
+package user_interface.graphics;
 
 import chess.services.GlobalContext;
 import communication.ChannelNames;
@@ -9,7 +9,7 @@ import javax.swing.*;
 public class PopupController {
 
     public void registerEvents() {
-        EventBus.getEventBus().register(ChannelNames.UI_CHECK, (Object param) -> {
+        EventBus.getEventBus().register(ChannelNames.CHECK, (Object param) -> {
             if (GlobalContext.getConfiguration().isEnablePopups()) {
                 JOptionPane.showMessageDialog(null, "Check!");
 
@@ -19,7 +19,7 @@ public class PopupController {
             return null;
         });
 
-        EventBus.getEventBus().register(ChannelNames.UI_CHECKMATE, (Object param) -> {
+        EventBus.getEventBus().register(ChannelNames.CHECKMATE, (Object param) -> {
             if (GlobalContext.getConfiguration().isEnablePopups()) {
                 JOptionPane.showMessageDialog(null, "Checkmate!!!");
             } else {
@@ -28,7 +28,7 @@ public class PopupController {
             return null;
         });
 
-        EventBus.getEventBus().register(ChannelNames.UI_STALEMATE, (Object param) -> {
+        EventBus.getEventBus().register(ChannelNames.STALEMATE, (Object param) -> {
             if (GlobalContext.getConfiguration().isEnablePopups()) {
                 JOptionPane.showMessageDialog(null, "Stalemate!");
             } else {

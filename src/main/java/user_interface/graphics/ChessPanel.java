@@ -1,7 +1,7 @@
-package graphics;
+package user_interface.graphics;
 
+import chess.Board;
 import chess.figures.Field;
-import chess.*;
 import chess.services.BoardMovement;
 import chess.services.GlobalContext;
 import chess.util.Move;
