@@ -35,7 +35,7 @@ public class Move implements Serializable {
     }
 
     public String toConsoleString() {
-        return String.format("%d. [%s] %c%d -> %c%d",nr, figName, xCoords[sourcePosition[0]], sourcePosition[1] + 1,
+        return String.format("%d. [%s] %c%d -> %c%d", nr, figName, xCoords[sourcePosition[0]], sourcePosition[1] + 1,
                 xCoords[targetPosition[0]], targetPosition[1] + 1);
     }
 

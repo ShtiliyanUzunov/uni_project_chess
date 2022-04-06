@@ -6,6 +6,7 @@ import chess.services.GlobalContext;
 import chess.util.Move;
 import communication.ChannelNames;
 import communication.EventBus;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Random;
@@ -23,6 +24,10 @@ public class NaiveAgent {
     public NaiveAgent(int delay) {
         this.delay = delay;
         registerEvents();
+    }
+
+    public void stop() {
+        executorService.shutdown();
     }
 
     private synchronized void registerEvents() {

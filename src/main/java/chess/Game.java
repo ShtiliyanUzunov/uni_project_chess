@@ -9,6 +9,7 @@ import communication.EventBus;
 import user_interface.console.ConsoleInterface;
 import user_interface.graphics.ChessFrame;
 import lombok.*;
+import user_interface.headless.HeadlessInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +77,8 @@ public class Game {
             if (colors.contains(board.getPlayerTurn())) {
                 if (!board.isGameOver()) {
                     naiveAgent.play();
+                } else {
+                    naiveAgent.stop();
                 }
             }
             return null;
@@ -91,7 +94,8 @@ public class Game {
                 new ConsoleInterface();
                 break;
             case HEADLESS:
-                throw new IllegalArgumentException("Headless interface not supported yet");
+                new HeadlessInterface();
+                break;
         }
     }
 
