@@ -8,10 +8,7 @@ import java.util.List;
 import chess.figures.*;
 import chess.services.History;
 import chess.services.Logging;
-import chess.util.EncodedBoard;
-import chess.util.FigureEncodings;
-import chess.util.Move;
-import chess.util.PureFunction;
+import chess.util.*;
 import communication.ChannelNames;
 import communication.EventBus;
 import lombok.Getter;
@@ -38,7 +35,11 @@ public class Board implements Serializable {
     private List<Move> availableMovesForPlayer;
 
     @Getter
-    private History history = new History();
+    @Setter
+    private GameStatus gameStatus = GameStatus.RUNNING;
+
+    @Getter
+    private final History history = new History();
 
     private static final EventBus eventBus = EventBus.getEventBus();
 
@@ -57,23 +58,35 @@ public class Board implements Serializable {
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++)
                 availableMovesForPlayer.addAll(chessBoard[i][j].getAvailableMoves());
+
         long end = System.currentTimeMillis();
         Logging.log("Available moves calc time: " + (end - start));
 
-        if (checkMate()) {
-            EventBus.getEventBus().post(ChannelNames.CHECKMATE, null);
-        }
+        updateGameStatusAndSendNotifications();
 
+        return null;
+    }
+
+    private void updateGameStatusAndSendNotifications() {
         if (kingChecked() && !checkMate()) {
             EventBus.getEventBus().post(ChannelNames.CHECK, null);
         }
 
+        if (checkMate()) {
+            gameStatus = GameStatus.CHECKMATE;
+            EventBus.getEventBus().post(ChannelNames.CHECKMATE, null);
+        }
+
         if (stalemate()) {
+            gameStatus = GameStatus.STALEMATE;
             EventBus.getEventBus().post(ChannelNames.STALEMATE, null);
         }
 
+        if (insufficientMaterial()) {
+            gameStatus = GameStatus.INSUFFICIENT_MATERIAL;
+        }
+
         EventBus.getEventBus().post(ChannelNames.UI_INFO_UPDATE, null);
-        return null;
     }
 
     @PureFunction
@@ -133,6 +146,7 @@ public class Board implements Serializable {
         lastMove = new int[4];
         playerTurn = "White";
         history.clear();
+        gameStatus = GameStatus.RUNNING;
 
         /*
          * White pieces
@@ -234,6 +248,7 @@ public class Board implements Serializable {
     public int[] calculateMaterial() {
         int matWhite = 0;
         int matBlack = 0;
+        
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Figure f = chessBoard[i][j];
@@ -263,6 +278,8 @@ public class Board implements Serializable {
                 .blackKingCoordinates(Arrays.copyOf(getBlackKing().getPosition(), 2))
                 .lastMove(Arrays.copyOf(lastMove, lastMove.length))
                 .playerTurn(playerTurn)
+                .gameStatus(gameStatus)
+                .material(calculateMaterial())
                 .build();
     }
 
@@ -281,5 +298,6 @@ public class Board implements Serializable {
         int[] bkCoordinates = encodedBoard.getBlackKingCoordinates();
         whiteKing = getElementAt(wkCoordinates[0], wkCoordinates[1]);
         blackKing = getElementAt(bkCoordinates[0], bkCoordinates[1]);
+        gameStatus = encodedBoard.getGameStatus();
     }
 }

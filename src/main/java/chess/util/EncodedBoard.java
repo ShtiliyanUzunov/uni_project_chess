@@ -13,6 +13,8 @@ public class EncodedBoard {
     private int[] whiteKingCoordinates;
     private int[] blackKingCoordinates;
     private int[] lastMove;
+    private int[] material;
     private String playerTurn;
+    private GameStatus gameStatus;
 
 }

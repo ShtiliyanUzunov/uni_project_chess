@@ -1,5 +1,7 @@
 package server;
 
+import chess.services.GlobalContext;
+import chess.util.Environment;
 import chess.util.Move;
 import com.google.gson.Gson;
 import lombok.Setter;
@@ -11,7 +13,6 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,9 +26,6 @@ public class FrontController {
     public void dispatchMessage(String msg) {
         String header = msg.substring(0, msg.indexOf('\n'));
         String body = msg.substring(msg.indexOf('\n'));
-
-        System.out.println("Header: " + header);
-        System.out.println("Body: " + body);
 
         if (!Protocol.headerToClassMapping.containsKey(header)) {
             System.out.println("Unknown header " + header);
@@ -44,7 +42,7 @@ public class FrontController {
 
         try {
             Method method = headerToMethodMap.get(header);
-            Object result = method.invoke(bodyData);
+            Object result = bodyData != null ? method.invoke(this, bodyData) : method.invoke(this);
             String responseBody = g.toJson(result);
             sendResponse(responseBody);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -67,9 +65,26 @@ public class FrontController {
     }
 
     @Handles(Protocol.PLAY_MOVE)
-    public void playMove(Move move) {
+    public Environment playMove(Move move) {
         System.out.println(move);
+        return GlobalContext.getEnvironment();
     }
 
+    @Handles(Protocol.NEW_GAME)
+    public String newGame() {
+        System.out.println("New game requested");
+        return "Success new game";
+    }
+
+    @Handles(Protocol.SAVE_GAME)
+    public String saveGame() {
+        System.out.println("Save game requested");
+        return "Success save game";
+    }
+
+    @Handles(Protocol.ENVIRONMENT_STATE)
+    public Environment environmentState() {
+        return GlobalContext.getEnvironment();
+    }
 
 }

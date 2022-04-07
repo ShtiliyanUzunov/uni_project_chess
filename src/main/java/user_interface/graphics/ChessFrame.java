@@ -227,7 +227,7 @@ public class ChessFrame extends JFrame {
             File output = fileChooser.getSelectedFile();
 
             if (output != null) {
-                eventBus.post(ChannelNames.UI_SAVE_GAME, output);
+                eventBus.post(ChannelNames.SAVE_GAME, output);
             }
         });
 
@@ -235,7 +235,7 @@ public class ChessFrame extends JFrame {
 
     private void setNewGameAction() {
         newGame.addActionListener(e -> {
-            eventBus.post(ChannelNames.UI_NEW_GAME, null);
+            eventBus.post(ChannelNames.NEW_GAME, null);
             chessPanel.repaint();
         });
     }

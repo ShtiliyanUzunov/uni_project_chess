@@ -2,6 +2,7 @@ package chess.services;
 
 import chess.Board;
 import chess.util.Configuration;
+import chess.util.Environment;
 
 public class GlobalContext {
 
@@ -33,6 +34,13 @@ public class GlobalContext {
 
     public static Configuration getConfiguration() {
         return configuration;
+    }
+
+    public static Environment getEnvironment() {
+        return Environment.builder()
+                .state(board.getEncodedState())
+                .availableMoves(board.getAvailableMovesForPlayer())
+                .build();
     }
 
 }

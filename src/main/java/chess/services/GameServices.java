@@ -11,15 +11,23 @@ public class GameServices {
     private EventBus eventBus = EventBus.getEventBus();
 
     public GameServices() {
-        eventBus.register(ChannelNames.UI_NEW_GAME, (Object param) -> {
+        eventBus.register(ChannelNames.NEW_GAME, (Object param) -> {
             this.newGame();
             return null;
         });
 
-        eventBus.register(ChannelNames.UI_SAVE_GAME, (Object param) -> {
-            File p = (File) param;
-            this.saveGame(p);
-            return null;
+        eventBus.register(ChannelNames.SAVE_GAME, (Object param) -> {
+            if (param instanceof File) {
+                File p = (File) param;
+                this.saveGame(p);
+            }
+
+            if (param instanceof String) {
+                File p = new File((String) param);
+                this.saveGame(p);
+            }
+
+            throw new IllegalArgumentException("Unsupported parameter type");
         });
 
         eventBus.register(ChannelNames.UI_LOAD_GAME, (Object param) -> {

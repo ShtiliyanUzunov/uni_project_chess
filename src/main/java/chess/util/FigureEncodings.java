@@ -14,12 +14,12 @@ public class FigureEncodings {
     public static final int WHITE_ROOK = 14;
     public static final int WHITE_QUEEN = 15;
 
-    public static final int BLACK_KING = 20;
-    public static final int BLACK_PAWN = 21;
-    public static final int BLACK_KNIGHT = 22;
-    public static final int BLACK_BISHOP = 23;
-    public static final int BLACK_ROOK = 24;
-    public static final int BLACK_QUEEN = 25;
+    public static final int BLACK_KING = -10;
+    public static final int BLACK_PAWN = -11;
+    public static final int BLACK_KNIGHT = -12;
+    public static final int BLACK_BISHOP = -13;
+    public static final int BLACK_ROOK = -14;
+    public static final int BLACK_QUEEN = -15;
 
     public static Figure getFigureFromEncoding(Integer encoding, Board b) {
         switch (encoding) {

@@ -23,14 +23,15 @@ public class Protocol {
     public static final String ENVIRONMENT_STATE = "environmentState";
     public static final String NEW_GAME = "newGame";
     public static final String CLOSE_CONNECTION = "closeConnection";
+    public static final String SAVE_GAME = "saveGame";
 
     static {
         headerToClassMapping = new HashMap<>();
 
         headerToClassMapping.put(PLAY_MOVE, Move.class);
-        headerToClassMapping.put(ENVIRONMENT_STATE, EncodedBoard.class);
+        headerToClassMapping.put(ENVIRONMENT_STATE, null);
         headerToClassMapping.put(NEW_GAME, null);
-
+        headerToClassMapping.put(SAVE_GAME, null);
     }
 
 }
